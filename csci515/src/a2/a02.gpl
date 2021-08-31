@@ -1,0 +1,132 @@
+//
+//  aksinha
+//  a02.gpl
+//  Assignment 02 - Your game
+//
+//  Created by Atreya Sinha on 08/30/21.
+//  Copyright © 2020 Atreya Sinha. All rights reserved.
+//
+int window_height = 400;
+int window_width = 600;
+string window_title = "Assignment 02";
+
+int animation_speed = 95;
+
+int x_inc = 2;
+int y_inc = 1;
+int ball_size = 10;
+int block_count = 300;
+rectangle blocks[300];
+
+int row;
+int col;
+int block_size;
+int i;
+
+// animation initialization
+forward animation ball_animate(circle cur_ball);
+
+// ball initialization
+circle ball(radius = ball_size, green = 0, blue = 0, red = 0, animation_block = ball_animate);
+
+// bat initialization
+rectangle bat(x = window_height / 2, y = 5, w = 100, h = 10, green = 0, blue = 1, red = 4);
+
+// textbox initialization
+textbox tb(text = "", x = window_width / 5, y = window_height / 2, blue = 0.5, size = 0.15);
+textbox instructions_tb(text = "Use Arrows to move", x = window_width - 200, y = window_height - 50, blue = 0.5, size = 0.1);
+
+// initialize blocks
+initialization {
+    i = 1;
+    block_size = window_width / 50;
+    for (row = 0; row < 30; row += 1) {
+        for (col = 0; col < 10; col += 1) {
+            blocks[i].h = block_size;
+            blocks[i].w = block_size;
+            blocks[i].x = row * block_size;
+            blocks[i].y = window_height - (col + 1) * block_size;
+            i += 1;
+        }
+    }
+}
+
+// rightarrow >
+//
+// bat goes right
+//
+on rightarrow {
+    if (bat.x < window_width - 50) {
+        bat.x += 10;
+    }
+}
+
+// leftarrow <
+//
+// bat goes left
+//
+on leftarrow {
+    if (bat.x > -25) {
+        bat.x -= 10;
+    }
+}
+
+// uparrow /\
+//
+// bat goes up
+//
+on uparrow {
+    bat.y += 10;
+}
+
+// downarrow \/
+//
+// bat goes down
+//
+on downarrow {
+    if (bat.y > 0) {
+        bat.y -= 10;
+    }
+}
+
+// ball_animate animation
+//
+// @param cur_ball the game object
+//
+animation ball_animate(circle cur_ball) {
+    if (cur_ball.y < 0) {
+        tb.text = "Oh no! you lost.";
+    }
+
+    if (block_count == 0) {
+        tb.text = "YOU WIN!!!";
+        cur_ball.x = window_height / 2;
+        cur_ball.y = window_width / 2;
+    }
+
+    if (cur_ball.x < 0 || cur_ball.x > window_width - ball_size * 2) {
+        x_inc = -x_inc;
+    }
+
+    if (cur_ball.y > window_height - ball_size)
+        y_inc = -y_inc;
+
+    if (cur_ball touches bat) {
+        y_inc = -y_inc;
+        x_inc = -x_inc;
+    }
+
+    // on each step of the animation, move the ball
+    cur_ball.x += x_inc;
+    cur_ball.y += y_inc;
+
+    for (i = 0; i < 300; i += 1) {
+        if (blocks[i].visible && cur_ball touches blocks[i]) {
+            blocks[i].visible = false;
+            y_inc = -y_inc;
+            i = 300; // break out of loop
+            x_inc = (random(6) - 3) * 2;
+            block_count--;
+        }
+    }
+}
