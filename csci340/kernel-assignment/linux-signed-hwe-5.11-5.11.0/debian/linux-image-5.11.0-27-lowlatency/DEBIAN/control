@@ -1,0 +1,17 @@
+Package: linux-image-5.11.0-27-lowlatency
+Source: linux-signed-hwe-5.11
+Version: 5.11.0-27.29~20.04.1
+Architecture: amd64
+Maintainer: Canonical Kernel Team <kernel-team@lists.ubuntu.com>
+Installed-Size: 9960
+Depends: kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-5.11.0-27-lowlatency
+Recommends: grub-pc | grub-efi-amd64 | grub-efi-ia32 | grub | lilo, initramfs-tools | linux-initramfs-tool
+Suggests: fdutils, linux-doc | linux-hwe-5.11-source-5.11.0, linux-hwe-5.11-tools, linux-headers-5.11.0-27-lowlatency, linux-modules-extra-5.11.0-27-lowlatency
+Conflicts: linux-image-unsigned-5.11.0-27-lowlatency
+Provides: aufs-dkms, fuse-module, ivtv-modules, kvm-api-4, linux-image, redhat-cluster-modules, spl-dkms, spl-modules, virtualbox-guest-modules, zfs-dkms, zfs-modules
+Built-Using: linux-hwe-5.11 (= 5.11.0-27.29~20.04.1)
+Section: kernel
+Priority: optional
+Description: Signed kernel image lowlatency
+ A kernel image for lowlatency.  This version of it is signed with
+ Canonical's UEFI signing key.

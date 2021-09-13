@@ -1,0 +1,124 @@
+#! /usr/bin/make -f
+
+##export DH_VERBOSE := 1
+
+DEB_HOST_ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)
+
+src = $(shell dpkg-parsechangelog -S Source)
+ver = $(shell dpkg-parsechangelog -S Version)
+abi = $(shell echo "$(ver)" | sed -ne 's/\([0-9]*\.[0-9]*\.[0-9]*\-[0-9]*\)\..*/\1/p')
+
+# Work out the source package name and version of the unsigned package
+# By convention, it is the name of this package with -signed stripped.
+# The version is identical to this package less any rebuild suffix (+signedN).
+unsigned_src = $(shell echo $(src) | sed -e 's/-signed//')
+unsigned_ver = $(shell echo $(ver) | sed -e 's/+[0-9][0-9]*//')
+
+# Work out header packges for build deps. Depend on the common header
+# package and the per-arch generic headers package (assumes all arches
+# have a generic flavour, which is currently true).
+src_headers = $(unsigned_src)-headers-$(abi)
+src_headers_arch = linux-headers-$(abi)-generic
+
+# We build our control file.  This has to be done before dh runs otherwise
+# we have no binary files and we will not run the appropriate targets.
+pre-clean:
+	sed <debian/control.stub >debian/control			\
+		-e "s/ABI/$(abi)/g"					\
+		-e "s/UNSIGNED_SRC_PACKAGE/$(unsigned_src)/g"		\
+		-e "s/UNSIGNED_SRC_VERSION/$(unsigned_ver)/g"		\
+		-e 's/SRCPKGNAME/$(src)/g'				\
+		-e 's/HEADERS_COMMON/$(src_headers)/g'			\
+		-e 's/HEADERS_ARCH/$(src_headers_arch)/g'
+	rm -rf ./$(unsigned_ver) UNSIGNED SIGNED
+	rm -f 	debian/linux-image-*.install				\
+		debian/linux-image-*.preinst 				\
+		debian/linux-image-*.prerm 				\
+		debian/linux-image-*.postinst 				\
+		debian/linux-image-*.postrm
+	rm -f 	debian/kernel-signed-image-*.install
+
+PHONY: pre-clean
+
+clean:: pre-clean
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	./download-signed "$(src_headers_arch)" "$(unsigned_ver)" "$(unsigned_src)"
+	#./download-unsigned "$(DEB_HOST_ARCH)" "$(unsigned_ver)"
+	mkdir SIGNED
+	(									\
+		cd "$(unsigned_ver)" || exit 1;					\
+		for s in *.efi.signed; do					\
+			[ ! -f "$$s" ] && continue;				\
+			base=$$(echo "$$s" | sed -e 's/.efi.signed//');		\
+			(							\
+				vars="$${base}.efi.vars";			\
+				[ -f "$$vars" ] && . "./$$vars";		\
+				if [ "$$GZIP" = "1" ]; then			\
+					gzip -9 "$$s";				\
+					mv "$${s}.gz" "$$s";			\
+				fi;						\
+			);							\
+			chmod 600 "$$s";					\
+			ln "$$s" "../SIGNED/$$base";				\
+		done;								\
+		for s in *.opal.sig; do						\
+			[ ! -f "$$s" ] && continue;				\
+			base=$$(echo "$$s" | sed -e 's/.opal.sig//');		\
+			cat "$$base.opal" "$$s" >"../SIGNED/$$base";		\
+			chmod 600 "../SIGNED/$$base";				\
+		done;								\
+		for s in *.sipl.sig; do						\
+			[ ! -f "$$s" ] && continue;				\
+			base=$$(echo "$$s" | sed -e 's/.sipl.sig//');		\
+			cat "$$base.sipl" "$$s" >"../SIGNED/$$base";		\
+			chmod 600 "../SIGNED/$$base";				\
+		done								\
+	)
+
+override_dh_auto_install:
+	for signed in "SIGNED"/*; do						\
+		flavour=$$(echo "$$signed" | sed -e "s@.*-$(abi)-@@");		\
+		instfile=$$(echo "$$signed" | sed -e "s@[^/]*/@@"		\
+			-e "s@-$(abi)-.*@@");					\
+		verflav="$(abi)-$$flavour";					\
+										\
+		package="kernel-signed-image-$$verflav-di";			\
+		echo "$$package: adding $$signed";				\
+		echo "$$signed boot" >>"debian/$$package.install";		\
+										\
+		package="linux-image-$$verflav";				\
+		echo "$$package: adding $$signed";				\
+		echo "$$signed boot" >>"debian/$$package.install";		\
+										\
+		./generate-depends linux-image-unsigned-$$verflav $(unsigned_ver)	\
+			linux-image-$$verflav					\
+			>>"debian/linux-image-$$verflav.substvars";	\
+										\
+		for which in postinst postrm preinst prerm; do			\
+			template="debian/templates/image.$$which.in";		\
+			script="debian/$$package.$$which";			\
+			sed -e "s/@abiname@/$(abi)/g"				\
+			    -e "s/@localversion@/-$$flavour/g"			\
+			    -e "s/@image-stem@/$$instfile/g"			\
+				<"$$template" >"$$script";			\
+		done;								\
+		echo "interest linux-update-$(abi)-$$flavour"	 		\
+			>"debian/$$package.triggers";				\
+	done
+	dh_install
+
+override_dh_builddeb:
+	dh_builddeb
+	for pkg in $$(dh_listpackages); do \
+		case $$pkg in *dbgsym) ;; *) continue ;; esac; \
+		mv ../$${pkg}_$(ver)_$(DEB_HOST_ARCH).deb \
+		   ../$${pkg}_$(ver)_$(DEB_HOST_ARCH).ddeb; \
+		sed -i "/^$${pkg}_/s/\.deb /.ddeb /" debian/files; \
+	done
+
+override_dh_fixperms:
+	dh_fixperms -X/boot/

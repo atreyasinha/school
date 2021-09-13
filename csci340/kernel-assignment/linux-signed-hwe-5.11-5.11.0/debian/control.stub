@@ -1,0 +1,83 @@
+Source: SRCPKGNAME
+Section: kernel
+Priority: optional
+Maintainer: Canonical Kernel Team <kernel-team@lists.ubuntu.com>
+Build-Depends:
+ debhelper (>= 9),
+ lsb-release,
+ python3,
+ python3-apt,
+Build-Depends-Arch:
+ sbsigntool [amd64 arm64],
+ HEADERS_COMMON (>= UNSIGNED_SRC_VERSION),
+ HEADERS_ARCH (>= UNSIGNED_SRC_VERSION),
+Standards-Version: 3.9.4
+
+Package: linux-image-ABI-generic
+Architecture: amd64 arm64 ppc64el s390x
+Depends: ${unsigned:Depends}
+Recommends: ${unsigned:Recommends}
+Suggests: ${unsigned:Suggests}
+Conflicts: ${unsigned:Conflicts}
+Provides: ${unsigned:Provides}
+Built-Using: UNSIGNED_SRC_PACKAGE (= UNSIGNED_SRC_VERSION)
+Description: Signed kernel image generic
+ A kernel image for generic.  This version of it is signed with
+ Canonical's UEFI/Opal signing key.
+
+Package: linux-image-ABI-lowlatency
+Architecture: amd64
+Depends: ${unsigned:Depends}
+Recommends: ${unsigned:Recommends}
+Suggests: ${unsigned:Suggests}
+Conflicts: ${unsigned:Conflicts}
+Provides: ${unsigned:Provides}
+Built-Using: UNSIGNED_SRC_PACKAGE (= UNSIGNED_SRC_VERSION)
+Description: Signed kernel image lowlatency
+ A kernel image for lowlatency.  This version of it is signed with
+ Canonical's UEFI signing key.
+
+Package: linux-image-ABI-generic-64k
+Architecture: arm64
+Depends: ${unsigned:Depends}
+Recommends: ${unsigned:Recommends}
+Suggests: ${unsigned:Suggests}
+Conflicts: ${unsigned:Conflicts}
+Provides: ${unsigned:Provides}
+Built-Using: UNSIGNED_SRC_PACKAGE (= UNSIGNED_SRC_VERSION)
+Description: Signed kernel image generic-64k
+ A kernel image for generic-64k.  This version of it is signed with
+ Canonical's UEFI signing key.
+
+Package: kernel-signed-image-ABI-generic-di
+Package-Type: udeb
+Section: debian-installer
+Priority: extra
+Provides: kernel-signed-image
+Architecture: amd64 arm64 ppc64el s390x
+Built-Using: UNSIGNED_SRC_PACKAGE (= UNSIGNED_SRC_VERSION)
+Description: Signed kernel image generic for the Debian installer
+ A kernel image for generic.  This version of it is signed with
+ Canonical's UEFI signing key.  It is intended for the Debian installer,
+ it does _not_ provide a usable kernel for your full Debian system.
+
+Package: linux-image-ABI-generic-dbgsym
+Section: devel
+Architecture: amd64 arm64 ppc64el s390x
+Depends: linux-image-unsigned-ABI-generic-dbgsym
+Description: Signed kernel image generic
+ A link to the debugging symbols for the generic signed kernel.
+
+Package: linux-image-ABI-lowlatency-dbgsym
+Section: devel
+Architecture: amd64
+Depends: linux-image-unsigned-ABI-lowlatency-dbgsym
+Description: Signed kernel image lowlatency
+ A link to the debugging symbols for the lowlatency signed kernel.
+
+Package: linux-image-ABI-generic-64k-dbgsym
+Section: devel
+Architecture: arm64
+Depends: linux-image-unsigned-ABI-generic-64k-dbgsym
+Description: Signed kernel image generic-64k
+ A link to the debugging symbols for the generic-64k signed kernel.
