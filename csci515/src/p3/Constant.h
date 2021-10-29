@@ -6,8 +6,7 @@
 
 class Constant : public Expression {
   public:
-    Constant(Gpl_type enum_name) 
-      : intrinsic_type(enum_name) {}
+    Constant(Gpl_type enum_name) : intrinsic_type(enum_name) {}
     virtual const Constant*   evaluate() const final;
     virtual int         as_int()    const {throw intrinsic_type;}
     virtual double      as_double() const {throw intrinsic_type;}
@@ -20,8 +19,7 @@ class Constant : public Expression {
 
 class Integer_constant : public Constant {
   public:
-    Integer_constant(int d) 
-      : Constant(INT), data(d) {}
+    Integer_constant(int d) : Constant(INT), data(d) {}
     virtual int         as_int()    const { return data; }
     virtual double      as_double() const { return data; }
     virtual std::string as_string() const { return std::to_string(data);}
@@ -31,8 +29,7 @@ class Integer_constant : public Constant {
 
 class Double_constant : public Constant {
   public:
-    Double_constant(double d) 
-      : Constant(DOUBLE), data(d) {}
+    Double_constant(double d) : Constant(DOUBLE), data(d) {}
     virtual double      as_double() const { return data; }
     virtual std::string as_string() const { return std::to_string(data);}
   private:
@@ -41,8 +38,7 @@ class Double_constant : public Constant {
 
 class String_constant : public Constant {
   public:
-    String_constant(const std::string& d) 
-      : Constant(STRING), data(d) {}
+    String_constant(const std::string& d) : Constant(STRING), data(d) {}
     virtual std::string as_string() const { return data;}
   private:
     std::string data;

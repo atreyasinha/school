@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "constant.h": "c",
+        "gpl_type.h": "c",
+        "scope_manager.h": "c",
+        "*.y": "c"
+    }
+}
