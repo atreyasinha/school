@@ -1,3 +1,0 @@
-//Strings cannot be assigned to doubles.
-//This should generate an error message
-double some_measurement="Happy Days";

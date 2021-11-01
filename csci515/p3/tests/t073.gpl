@@ -1,6 +1,0 @@
-// use M_PI from #include<cmath>
-// DO NOT CREATE YOUR OWN VALUE FOR PI
-double d = sin( 7 );
-double e = sin( 12.5 );
-string g = sin( 7 );
-string h = sin( 12.5 );

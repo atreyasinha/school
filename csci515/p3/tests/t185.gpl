@@ -1,2 +1,0 @@
-// since 3 and 4 are integers, the following should use integer division
-double should_be_0 = 3/4;

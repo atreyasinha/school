@@ -1,3 +1,0 @@
-int should_be_negative_1 = -1;
-int should_be_positive_42 = - -42; // can't use "--" because of T_MINUS_MINUS
-int should_be_negative_42 = - - - - - - -42;

@@ -1,3 +1,0 @@
-int nums[100];
-
-int i = nums;

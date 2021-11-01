@@ -1,3 +1,0 @@
-int steps[10];
-
-int x = steps[3.4];

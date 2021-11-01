@@ -1,11 +1,4 @@
-/*
-    aksinha
-    gpl.l
-    P1: First Project
 
-    Created by Atreya Sinha on 09/20/21.
-    Copyright © 2021 Atreya Sinha. All rights reserved.
-*/
 %option noyywrap
 %option nodefault
 %option nounput
@@ -25,6 +18,12 @@ Error error_handler; // error reporting object
 //      extern int line_count;
 int line_count = 1;
 
+void get_string_const(){
+  std::string s(yytext);
+  std::string result = s.substr(1, s.length()-2);
+  yylval.union_string = new std::string(result);
+}
+
 void illegal_token_error()
 {
   // have the error handling object report the problem
@@ -38,73 +37,70 @@ void illegal_token_error()
   // YOUR string* MEMBER
   yylval.union_string = new std::string(yytext);
 }
-
-
 %}
 
 %%
-"int"             { return T_INT; }
-"double"          { return T_DOUBLE;  }
-"string"          { return T_STRING;  }
-"triangle"        { return T_TRIANGLE;  }
-"pixmap"          { return T_PIXMAP;  }
-"circle"          { return T_CIRCLE;  }
-"rectangle"       { return T_RECTANGLE; }
-"textbox"         { return T_TEXTBOX; }
+[\n]          line_count++;
+[ \t\r]       ;
+"int"         { return T_INT; }
+"double"      { return T_DOUBLE; }
+"string"      { return T_STRING; }
+"triangle"    { return T_TRIANGLE; }
+"pixmap"      { return T_PIXMAP; }
+"circle"      { return T_CIRCLE; }
+"rectangle"   { return T_RECTANGLE; }
+"textbox"     { return T_TEXTBOX; }
 
  /* keywords */
-"forward"         { yylval.union_int = line_count; 
-                    return T_FORWARD;  }
-"initialization"  { return T_INITIALIZATION;  }
-"termination"     { return T_TERMINATION; }
-"on"              { return T_ON;  }
-"animation"       { return T_ANIMATION; }
-"if"              { return T_IF;  }
-"for"             { return T_FOR; }
-"else"            { return T_ELSE;  }
-"exit"            { yylval.union_int = line_count; 
-                    return T_EXIT; }
-"print"           { yylval.union_int = line_count; 
-                    return T_PRINT;  }
-"true"            { return T_TRUE;  }
-"false"           { return T_FALSE; }
+"forward"           { return T_FORWARD; }
+"initialization"    { return T_INITIALIZATION; }
+"termination"       { return T_TERMINATION; }
+"on"                { return T_ON; }
+"animation"         { return T_ANIMATION; }
+"if"                { return T_IF; }
+"for"               { return T_FOR; }
+"else"              { return T_ELSE; }
+"exit"              { return T_EXIT; }
+"print"             { return T_PRINT; }
+"true"              { return T_TRUE; }
+"false"             { return T_FALSE; }
 
  /* event keys */
-"space"           { return T_SPACE; }
-"leftarrow"       { return T_LEFTARROW; }
-"rightarrow"      { return T_RIGHTARROW;  }
-"uparrow"         { return T_UPARROW; }
-"downarrow"       { return T_DOWNARROW; }
-"leftmouse_down"  { return T_LEFTMOUSE_DOWN;  }
-"middlemouse_down"  { return T_MIDDLEMOUSE_DOWN;  }
-"rightmouse_down" { return T_RIGHTMOUSE_DOWN; }
-"leftmouse_up"    { return T_LEFTMOUSE_UP;  }
-"middlemouse_up"  { return T_MIDDLEMOUSE_UP;  }
-"rightmouse_up"   { return T_RIGHTMOUSE_UP; }
-"mouse_move"      { return T_MOUSE_MOVE;  }
-"mouse_drag"      { return T_MOUSE_DRAG;  }
-"f1"              { return T_F1;  }
-"akey"            { return T_AKEY;  }
-"skey"            { return T_SKEY;  }
-"dkey"            { return T_DKEY;  }
-"fkey"            { return T_FKEY;  }
-"hkey"            { return T_HKEY;  }
-"jkey"            { return T_JKEY;  }
-"kkey"            { return T_KKEY;  }
-"lkey"            { return T_SPACE; }
-"wkey"            { return T_SPACE; }
-"zkey"            { return T_SPACE; }
+"space"               { return T_SPACE; }
+"leftarrow"           { return T_LEFTARROW; }
+"rightarrow"          { return T_RIGHTARROW; }
+"uparrow"             { return T_UPARROW; }
+"downarrow"           { return T_DOWNARROW; }
+"leftmouse_down"      { return T_LEFTMOUSE_DOWN; }
+"middlemouse_down"    { return T_MIDDLEMOUSE_DOWN; }
+"rightmouse_down"     { return T_RIGHTMOUSE_DOWN; }
+"leftmouse_up"        { return T_LEFTMOUSE_UP; }
+"middlemouse_up"      { return T_MIDDLEMOUSE_UP; }
+"rightmouse_up"       { return T_RIGHTMOUSE_UP; }
+"mouse_move"          { return T_MOUSE_MOVE; }
+"mouse_drag"          { return T_MOUSE_DRAG; }
+"f1"                  { return T_F1; }
+"akey"                { return T_AKEY; }
+"skey"                { return T_SKEY; }
+"dkey"                { return T_DKEY; }
+"fkey"                { return T_FKEY; }
+"hkey"                { return T_HKEY; }
+"jkey"                { return T_JKEY; }
+"kkey"                { return T_KKEY; }
+"lkey"                { return T_LKEY; }
+"wkey"                { return T_WKEY; }
+"zkey"                { return T_ZKEY; }
 
  /* punctuation */
-"("               { return T_LPAREN;  }
-")"               { return T_RPAREN;  }
-"{"               { return T_LBRACE;  }
-"}"               { return T_RBRACE;  }
-"["               { return T_LBRACKET;  }
-"]"               { return T_RBRACKET;  }
-";"               { return T_SEMIC; }
-","               { return T_COMMA; }
-"."               { return T_PERIOD;  }
+"("   { return T_LPAREN; }  
+")"   { return T_RPAREN; }
+"{"   { return T_LBRACE; }
+"}"   { return T_RBRACE; }
+"["   { return T_LBRACKET; }
+"]"   { return T_RBRACKET; }
+";"   { return T_SEMIC; }
+","   { return T_COMMA; }
+"."   { return T_PERIOD; }
 
  /* assignment operators
   * unlike C/C++/Java, assignment operators are NOT part of expressions
@@ -112,46 +108,46 @@ void illegal_token_error()
   * unlike C/C++/Java, ++ and -- are not expressions operators
   * they are assignments operators
   */
-"="               { return T_ASSIGN;  }
-"+="              { return T_PLUS_ASSIGN; }
-"-="              { return T_MINUS_ASSIGN;  }
-"++"              { return T_PLUS_PLUS; }
-"--"              { return T_MINUS_MINUS; }
+"="     { return T_ASSIGN; }
+"+="    { return T_PLUS_ASSIGN; }
+"-="    { return T_MINUS_ASSIGN; }
+"++"    { return T_PLUS_PLUS; }
+"--"    { return T_MINUS_MINUS; }
 
  /* unary operators with textual names */
  /* (no precedence level required) */
-"sin"             { return T_SIN; }
-"cos"             { return T_COS; }
-"tan"             { return T_TAN; }
-"asin"            { return T_ASIN;  }
-"acos"            { return T_ACOS;  }
-"atan"            { return T_ATAN;  }
-"sqrt"            { return T_SQRT;  }
-"abs"             { return T_ABS; }
-"floor"           { return T_FLOOR; }
-"random"          { return T_RANDOM;  }
+"sin"       { return T_SIN; }
+"cos"       { return T_COS; }
+"tan"       { return T_TAN; }
+"asin"      { return T_ASIN; }
+"acos"      { return T_ACOS; }
+"atan"      { return T_ATAN; }
+"sqrt"      { return T_SQRT; }
+"abs"       { return T_ABS; }
+"floor"     { return T_FLOOR; }
+"random"    { return T_RANDOM; }
 
  /* graphical operators (also, add precedence level in .y file) */
-"touches"         { return T_TOUCHES; }
-"near"            { return T_NEAR;  }
+"touches"   { return T_TOUCHES; }
+"near"      { return T_NEAR; }
 
  /* mathematical operators (also, add precedence level in .y file) */
-"*"               { return T_MULTIPLY;  }
-"/"               { return T_DIVIDE;  }
-"+"               { return T_PLUS;  }
-"-"               { return T_MINUS; }
-"%"               { return T_MOD; }
+"*"   { return T_MULTIPLY; }
+"/"   { return T_DIVIDE; }
+"+"   { return T_PLUS; }
+"-"   { return T_MINUS; }
+"%"   { return T_MOD; }
 
  /* logical operators (also, add precedence level in .y file) */
-"<"               { return T_LESS;  }
-">"               { return T_GREATER; }
-"<="              { return T_LESS_EQUAL;  }
-">="              { return T_GREATER_EQUAL; }
-"=="              { return T_EQUAL; }
-"!="              { return T_NOT_EQUAL; }
-"!"               { return T_NOT; }
-"&&"              { return T_AND; }
-"||"              { return T_OR;  }
+"<"     { return T_LESS; }
+">"     { return T_GREATER; }
+"<="    { return T_LESS_EQUAL; }
+">="    { return T_GREATER_EQUAL; }
+"=="    { return T_EQUAL; }
+"!="    { return T_NOT_EQUAL; }
+"!"     { return T_NOT; }
+"&&"    { return T_AND; }
+"||"    { return T_OR; }
 
 
  /* The following tokens require "complex"
@@ -159,30 +155,15 @@ void illegal_token_error()
   * the project writeup for the requirements
   * of these regular expressions
   */
-
-  /* integer constant */
-[0-9]+              { yylval.union_int = std::stoi(yytext); 
-                      return T_INT_CONSTANT;  }
-  /* double constant */
-([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+) { yylval.union_double = std::stod(yytext); 
-                                    return T_DOUBLE_CONSTANT; }
-  /* string constant */
-\"[^\"\n]*\"        { yylval.union_string = new std::string(yytext); 
-                      yylval.union_string->erase(0,1); 
-                      yylval.union_string->erase(yylval.union_string->length() - 1, yylval.union_string->length());   
-                      return T_STRING_CONSTANT; }
-  /* identifier */
-[A-Za-z_][A-Za-z0-9_]*            { yylval.union_string = new std::string(yytext); 
-                                    return T_ID;  }
-  /* comments */
-\/\/[^\n]*\n        { line_count++; }
-[ \t]               {}
-\n                  { line_count++; }
-
+[0-9]+                              { yylval.union_int = atoi(yytext); return T_INT_CONSTANT; }       // integer constant
+([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+)   { yylval.union_double = atof(yytext); return T_DOUBLE_CONSTANT; } // double constant
+\"[^"\n"]*\"                        { get_string_const(); return T_STRING_CONSTANT; }                 // string constant
+[a-zA-Z_]+[a-zA-Z0-9_]*             { yylval.union_string = new std::string(yytext); return T_ID; }   // identifier
+\/\/.*                              ; // comment
 
  /* This should be the last pattern. If the lexer reaches this pattern
     there has been an error
   */
-.               {illegal_token_error(); return T_ERROR;}
+.                         { illegal_token_error(); return T_ERROR; }
 
 %%

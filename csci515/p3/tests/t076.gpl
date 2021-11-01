@@ -1,5 +1,0 @@
-int a = cos( 7 );
-int b = cos( 12.5 );
-int c = cos( "bobbing" );
-double f = cos( "bobbing" );
-string i = cos( "bobbing" );

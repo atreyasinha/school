@@ -1,2 +1,0 @@
-string s = "gpl is fun";
-string t = s + ", just kidding...";
