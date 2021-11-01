@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "gpl_type.h"
-#include "constant.h"
+#include "Constant.h"
 
 class Symbol {
     private:
