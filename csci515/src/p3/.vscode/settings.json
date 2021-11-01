@@ -3,6 +3,17 @@
         "constant.h": "c",
         "gpl_type.h": "c",
         "scope_manager.h": "c",
-        "*.y": "c"
+        "*.y": "c",
+        "new": "cpp",
+        "chrono": "cpp",
+        "cmath": "cpp",
+        "__config": "c",
+        "__nullptr": "c",
+        "filesystem": "c",
+        "bitset": "c",
+        "string_view": "c",
+        "memory": "c",
+        "map": "cpp",
+        "unordered_map": "cpp"
     }
 }

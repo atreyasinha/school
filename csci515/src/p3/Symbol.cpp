@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Symbol.h"
+#include "error.h"
     
 //for double variable
 Symbol::Symbol(const std::string& n, double* v):
@@ -46,8 +47,8 @@ Symbol::Symbol(const std::string& n, std::string* v, int c):
 
 Gpl_type Symbol::get_type() const { 
     return type;
-
 }
+
 std::string Symbol::get_name() const { 
     return name; 
 }
@@ -90,4 +91,37 @@ std::ostream& operator<<(std::ostream& os, const Symbol& sb) {
     }
     
     return os;
+}
+
+bool Symbol::is_array() {
+    if (count) return true;
+    return false;
+}
+
+const Constant* Symbol::as_constant() const {
+    switch (type) {
+        case INT:
+            return new Integer_constant(*value.int_pointer);
+        case DOUBLE:
+            return new Double_constant(*value.double_pointer);
+        case STRING:
+            return new String_constant(*value.string_pointer);
+        default:
+            throw type;
+    }
+}
+
+const Constant* Symbol::as_constant(int index) const {
+    if (index < 0 || index > count - 1)     return NULL;
+
+    switch (type) {
+        case INT:
+            return new Integer_constant(value.int_pointer[index]);
+        case DOUBLE:
+            return new Double_constant(value.double_pointer[index]);
+        case STRING:
+            return new String_constant(value.string_pointer[index]);
+        default:
+            throw type;
+    }
 }

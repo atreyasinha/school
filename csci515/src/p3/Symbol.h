@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "gpl_type.h"
+#include "constant.h"
 
 class Symbol {
     private:
@@ -37,6 +38,11 @@ class Symbol {
         //prevent compiler from generating these functions
         Symbol(const Symbol&) = delete;
         Symbol& operator=(const Symbol&) = delete;
+
+        bool is_array();
+        const Constant* as_constant() const;          //Symbol value is not an array
+        const Constant* as_constant(int index) const; //Symbol value is an array
+        
 };
 
 #endif

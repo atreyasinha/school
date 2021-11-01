@@ -1,9 +1,9 @@
 //
 // aksinha
 // gpl.y
-// P2: Second Project
+// P3: Third Project
 
-// Created by Atreya Sinha on 10/01/21.
+// Created by Atreya Sinha on 10/31/21.
 // Copyright © 2021 Atreya Sinha. All rights reserved.
 //
 // Mon Apr 27 16:03:16 PDT 2020
@@ -20,7 +20,6 @@
   #ifdef GRAPHICS
     #include "Window.h"
   #endif
-  #include "Constant.h"
 }
 
 // bison syntax to indicate the beginning of a C/C++ code section
@@ -35,7 +34,9 @@ extern int line_count;            // current line in the input; from record.l
 #include "gpl_type.h"
 #include "Scope_manager.h"
 #include "Expression.h"
+#include "Variable.h"
 #include <cassert>
+#include "Constant.h"
 
 template<typename BIN_OP, Operator_type optype> 
 const Expression* Bin_op_check(const Expression* one, const Expression* three, unsigned int valid_types) {
@@ -45,40 +46,20 @@ const Expression* Bin_op_check(const Expression* one, const Expression* three, u
     if (lhs_valid && rhs_valid)     return new BIN_OP(one, three);
     if (!lhs_valid)                 Error::error(Error::INVALID_LEFT_OPERAND_TYPE, operator_to_string(optype));
     if (!rhs_valid)                 Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, operator_to_string(optype));
+
+    delete one;
+    delete three;
     return new Integer_constant(0);
 }
 
-// template<typename OP, Operator_type optype>
-// const Expression* Bin_op_check(const Expression* one, const Expression* three, 
-//   unsigned int valid_types)
-// {
-//   bool lhs_valid = one->type() & valid_types;
-//   bool rhs_valid = three->type() & valid_types;
-//   if(lhs_valid && rhs_valid)
-//   {
-//     return new OP(one, three)
-//   }
-//   if(!lhs_valid)
-//     Error::error(Error::INVALID_LEFT_OPERAND_TYPE, operator_to_string(optype));
-//   if(!rhs_valid)
-//     Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, operator_to_string(optype));
-//   return new Integer_constant(0);
-// }
+template<typename UN_OP, Operator_type optype> 
+const Expression* Un_op_check(const Expression* one, unsigned int valid_types) {
+    bool valid = one->type() & valid_types;
 
-template<typename OP, Operator_type optype>
-const Expression* bin_op_check(const Expression* one, const Expression* three, unsigned int valid_types){ 
-    bool lhs_valid = one->type() & valid_types;
-    bool rhs_valid = three->type() & valid_types;
-    
-    if(lhs_valid && rhs_valid)
-        return new OP(one, three);
-    if(!lhs_valid)
-        Error::error(Error::INVALID_LEFT_OPERAND_TYPE, operator_to_string(optype));
-    if(!rhs_valid)
-        Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, operator_to_string(optype));
-    
+    if (valid)                      return new UN_OP(one);
+    if (!valid)                     Error::error(Error::INVALID_RIGHT_OPERAND_TYPE, operator_to_string(optype));
+
     delete one;
-    delete three;
     return new Integer_constant(0);
 }
 
@@ -116,8 +97,8 @@ const Expression* bin_op_check(const Expression* one, const Expression* three, u
 %token T_IF                  "if"
 %token T_FOR                 "for"
 %token T_ELSE                "else"
-%token <union_int> T_EXIT            "exit"  /* value is line number */
-%token <union_int> T_PRINT           "print"  /* value is line number */
+%token <union_int> T_EXIT    "exit"  /* value is line number */
+%token <union_int> T_PRINT   "print"  /* value is line number */
 %token T_TRUE                "true"
 %token T_FALSE               "false"
 
@@ -206,24 +187,26 @@ const Expression* bin_op_check(const Expression* one, const Expression* three, u
 %type <union_expression_ptr> primary_expression
 %type <union_expression_ptr> expression
 %type <union_expression_ptr> optional_initializer
+%type <union_expression_ptr> variable
 
-%left T_MULTIPLY T_DIVIDE T_MOD
-%left T_PLUS T_MINUS
+%left T_OR 
+%left T_AND
+
+%left T_EQUAL T_NOT_EQUAL
 
 %left T_LESS T_GREATER T_LESS_EQUAL T_GREATER_EQUAL
-%left T_EQUAL T_NOT_EQUAL 
+%left T_PLUS T_MINUS
 
-%left T_NEAR T_TOUCHES
-
-%nonassoc T_OR
-%nonassoc T_AND
+%left T_MULTIPLY T_DIVIDE T_MOD
 
 %left T_NOT
+
+%nonassoc T_TOUCHES
+%nonassoc T_NEAR
 
 %nonassoc T_UNARY_OPS
 %nonassoc T_IF_NO_ELSE
 %nonassoc T_ELSE
-
 
 %%
 
@@ -254,14 +237,13 @@ variable_declaration:
         if (scopemgr.defined_in_current_scope(*$2)) {
             Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, *$2);
             delete $2;
-            delete $3;
 
             break;
         }
 
         try {
             if ($1 == INT) {
-            int *ptr;
+                int *ptr;
                 if ($3 == nullptr)  ptr = new int(0);
                 else                ptr = new int($3->evaluate()->as_int());
                 scopemgr.add_to_current_scope(std::make_shared<Symbol>(*$2, ptr));
@@ -288,40 +270,49 @@ variable_declaration:
         delete $2;
         delete $3;
     }
-    | simple_type  T_ID T_LBRACKET T_INT_CONSTANT T_RBRACKET {
-        Scope_manager& scopemgr = Scope_manager::instance();
+    | simple_type  T_ID T_LBRACKET expression T_RBRACKET {
+        Scope_manager& scopemgr = Scope_manager::instance();    
+
+        int index = 1;
+        try {
+            index = $4->evaluate()->as_int();
+        } catch(Gpl_type badtype) {
+            Error::error(Error::ARRAY_SIZE_MUST_BE_AN_INTEGER, gpl_type_to_string(badtype), *$2);
+        }
+
+        if(index < 1){
+            Error::error(Error::INVALID_ARRAY_SIZE, *$2, std::to_string(index));
+            index = 1;
+        } 
+        
         if (scopemgr.defined_in_current_scope(*$2)) {
             Error::error(Error::PREVIOUSLY_DECLARED_VARIABLE, *$2);
             delete $2;
+            delete $4;
 
             break;
         }
-
-        if ($4 == 0) {
-            Error::error(Error::INVALID_ARRAY_SIZE, *$2, std::to_string($4));
-            delete $2;
-
-            break;
-        }
+        
 
         if ($1 == INT) {
-            int *temp = new int[$4];
-            for (int i = 0; i < $4; i++)    temp[i] = 42;
+            int *temp = new int[index];
+            for (int i = 0; i < index; i++)    temp[i] = 0;
             
-            scopemgr.add_to_current_scope(std::make_shared<Symbol>(*$2, temp, $4));
+            scopemgr.add_to_current_scope(std::make_shared<Symbol>(*$2, temp, index));
         } else if ($1 == DOUBLE) {
-            double *temp = new double[$4];
-            for (int i = 0; i < $4; i++)    temp[i] = 3.14159;
+            double *temp = new double[index];
+            for (int i = 0; i < index; i++)    temp[i] = 0.0;
             
-            scopemgr.add_to_current_scope(std::make_shared<Symbol>(*$2, temp, $4));
+            scopemgr.add_to_current_scope(std::make_shared<Symbol>(*$2, temp, index));
         } else if ($1 == STRING) {
-            std::string *temp = new std::string[$4];
-            for (int i = 0; i < $4; i++)    temp[i] = "Hello world";
+            std::string *temp = new std::string[index];
+            for (int i = 0; i < index; i++)    temp[i] = "";
             
-            scopemgr.add_to_current_scope(std::make_shared<Symbol>(*$2, temp, $4));
+            scopemgr.add_to_current_scope(std::make_shared<Symbol>(*$2, temp, index));
         }
         
         delete $2;
+        delete $4;
     }
     ;
 
@@ -515,8 +506,47 @@ assign_statement:
 
 //---------------------------------------------------------------------
 variable:
-    T_ID                                                        
-    | T_ID T_LBRACKET expression T_RBRACKET                     
+    T_ID {
+        Scope_manager& scopemgr = Scope_manager::instance();
+        std::shared_ptr<Symbol> sb = scopemgr.lookup(*$1);
+
+        if (sb == NULL) {
+            $$ = new Variable("");
+            Error::error(Error::UNDECLARED_VARIABLE, *$1);
+            delete $1;
+            break;
+        }
+
+        if (sb->is_array()) {
+            $$ = new Variable("");
+            Error::error(Error::VARIABLE_IS_AN_ARRAY, *$1);
+            delete $1;
+            break;
+        }
+
+        $$ = new Variable(*$1);
+        delete $1;
+    }                                                       
+    | T_ID T_LBRACKET expression T_RBRACKET {
+        Scope_manager& scopemgr = Scope_manager::instance();
+        std::shared_ptr<Symbol> sb = scopemgr.lookup(*$1);
+
+        if (sb == NULL){
+            Error::error(Error::UNDECLARED_VARIABLE, *$1 + "[]");
+        } else if (!sb->is_array()){
+            Error::error(Error::VARIABLE_NOT_AN_ARRAY, *$1);
+        } else if ($3->type() != INT){
+            Error::error(Error::ARRAY_INDEX_MUST_BE_AN_INTEGER, *$1, gpl_type_to_string($3->type()));
+        } else {
+            $$ = new Variable(*$1, $3);
+            delete $1;
+            break;
+        }
+
+        $$ = new Variable("");
+        delete $1;
+        delete $3;
+    }                      
     | T_ID T_PERIOD T_ID                                        {$1; $3; /*CHANGE*/}
     | T_ID T_LBRACKET expression T_RBRACKET T_PERIOD T_ID       {$1; $6; /*CHANGE*/}
     ;
@@ -524,42 +554,56 @@ variable:
 //---------------------------------------------------------------------
 expression:
     primary_expression                                          { $$=$1; }
-    | expression T_OR expression                                { $$ = nullptr; /*CHANGE*/ }
-    | expression T_AND expression                               { $$ = nullptr; /*CHANGE*/ }
-    | expression T_LESS_EQUAL expression                        { $$ = nullptr; /*CHANGE*/ }
-    | expression T_GREATER_EQUAL  expression                    { $$ = nullptr; /*CHANGE*/ }
-    | expression T_LESS expression                              { $$ = nullptr; /*CHANGE*/ }
-    | expression T_GREATER  expression                          { $$ = nullptr; /*CHANGE*/ }
-    | expression T_EQUAL expression                             { $$ = nullptr; /*CHANGE*/ }
-    | expression T_NOT_EQUAL expression                         { $$ = nullptr; /*CHANGE*/ }
-    | expression T_PLUS expression                              { $$ = Bin_op_check<Plus, PLUS>($1, $3, INT|DOUBLE|STRING );}
-    | expression T_MINUS expression                             { $$ = nullptr; /*CHANGE*/ }
-    | expression T_MULTIPLY expression                          { $$ = nullptr; /*CHANGE*/ }
+    | expression T_OR expression                                { $$ = Bin_op_check<Or, OR>($1, $3, INT|DOUBLE ); }
+    | expression T_AND expression                               { $$ = Bin_op_check<And, AND>($1, $3, INT|DOUBLE ); }
+    | expression T_LESS_EQUAL expression                        { $$ = Bin_op_check<Less_Equal, LESS_EQUAL>($1, $3, INT|DOUBLE|STRING ); }
+    | expression T_GREATER_EQUAL  expression                    { $$ = Bin_op_check<Greater_Equal, GREATER_EQUAL>($1, $3, INT|DOUBLE|STRING ); }
+    | expression T_LESS expression                              { $$ = Bin_op_check<Less_Than, LESS_THAN>($1, $3, INT|DOUBLE|STRING ); }
+    | expression T_GREATER  expression                          { $$ = Bin_op_check<Greater_Than, GREATER_THAN>($1, $3, INT|DOUBLE|STRING ); }
+    | expression T_EQUAL expression                             { $$ = Bin_op_check<Equal, EQUAL>($1, $3, INT|DOUBLE|STRING ); }
+    | expression T_NOT_EQUAL expression                         { $$ = Bin_op_check<Not_Equal, NOT_EQUAL>($1, $3, INT|DOUBLE|STRING ); }
+    | expression T_PLUS expression                              { $$ = Bin_op_check<Plus, PLUS>($1, $3, INT|DOUBLE|STRING ); }
+    | expression T_MINUS expression                             { $$ = Bin_op_check<Minus, MINUS>($1, $3, INT|DOUBLE ); }
+    | expression T_MULTIPLY expression                          { $$ = Bin_op_check<Multiply, MULTIPLY>($1, $3, INT|DOUBLE ); }
     | expression T_NEAR expression                              { $$ = nullptr; /*CHANGE*/ }
     | expression T_TOUCHES expression                           { $$ = nullptr; /*CHANGE*/ }
-    | expression T_DIVIDE expression                            { $$ = nullptr; /*CHANGE*/ }
-    | expression T_MOD expression                               { $$ = nullptr; /*CHANGE*/ }
-    | T_MINUS  expression %prec T_UNARY_OPS                     { $$ = nullptr; /*CHANGE*/ }
-    | T_NOT  expression                                         { $$ = nullptr; /*CHANGE*/ }
-    | T_SIN T_LPAREN expression T_RPAREN                        { $$ = nullptr; /*CHANGE*/ }
-    | T_COS T_LPAREN expression T_RPAREN                        { $$ = nullptr; /*CHANGE*/ }
-    | T_TAN T_LPAREN expression T_RPAREN                        { $$ = nullptr; /*CHANGE*/ }
-    | T_ASIN T_LPAREN expression T_RPAREN                       { $$ = nullptr; /*CHANGE*/ }
-    | T_ACOS T_LPAREN expression T_RPAREN                       { $$ = nullptr; /*CHANGE*/ }
-    | T_ATAN T_LPAREN expression T_RPAREN                       { $$ = nullptr; /*CHANGE*/ }
-    | T_SQRT T_LPAREN expression T_RPAREN                       { $$ = nullptr; /*CHANGE*/ }
-    | T_ABS T_LPAREN expression T_RPAREN                        { $$ = nullptr; /*CHANGE*/ }
-    | T_FLOOR T_LPAREN expression T_RPAREN                      { $$ = nullptr; /*CHANGE*/ }
-    | T_RANDOM T_LPAREN expression T_RPAREN                     { $$ = nullptr; /*CHANGE*/ }
+    | expression T_DIVIDE expression                            { 
+        if (($3->type() & (INT|DOUBLE) ) && ($3->evaluate()->as_double() == 0 )) {
+            Error::error(Error::DIVIDE_BY_ZERO_AT_PARSE_TIME);
+            delete $3;
+            delete $1;
+            $$ = new Integer_constant(0);
+        } else $$ = Bin_op_check<Divide, DIVIDE>($1, $3, INT|DOUBLE );
+    }
+    | expression T_MOD expression                               { 
+        if (($3->type() & (INT)) && ($3->evaluate()->as_int() == 0 )) {
+            Error::error(Error::MOD_BY_ZERO_AT_PARSE_TIME);
+            delete $3;
+            delete $1;
+            $$ = new Integer_constant(0);
+        } else $$ = Bin_op_check<Mod, MOD>($1, $3, INT );
+    }
+    | T_MINUS  expression %prec T_UNARY_OPS                     { $$ = Un_op_check<Unary_minus, UNARY_MINUS>($2, INT|DOUBLE ); }
+    | T_NOT  expression                                         { $$ = Un_op_check<Not, NOT>($2, INT|DOUBLE ); }
+    | T_SIN T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Sine, SIN>($3, INT|DOUBLE ); }
+    | T_COS T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Cosine, COS>($3, INT|DOUBLE ); }
+    | T_TAN T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Tan, TAN>($3, INT|DOUBLE ); }
+    | T_ASIN T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Asin, ASIN>($3, INT|DOUBLE ); }
+    | T_ACOS T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Acos, ACOS>($3, INT|DOUBLE ); }
+    | T_ATAN T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Atan, ATAN>($3, INT|DOUBLE ); }
+    | T_SQRT T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Sqrt, SQRT>($3, INT|DOUBLE ); }
+    | T_ABS T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Abs, ABS>($3, INT|DOUBLE ); }
+    | T_FLOOR T_LPAREN expression T_RPAREN                      { $$ = Un_op_check<Floor, FLOOR>($3, INT|DOUBLE ); }
+    | T_RANDOM T_LPAREN expression T_RPAREN                     { $$ = Un_op_check<Random, RANDOM>($3, INT|DOUBLE ); }
     ;
 
 //---------------------------------------------------------------------
 primary_expression:
-    T_LPAREN  expression T_RPAREN                               { $$ = nullptr; /*CHANGE*/ }
-    | variable                                                  { $$ = nullptr; /*CHANGE*/ }
+    T_LPAREN  expression T_RPAREN                               { $$ = $2; }
+    | variable                                                  { $$ = $1; }
     | T_INT_CONSTANT                                            { $$ = new Integer_constant($1); }
-    | T_TRUE                                                    { $$ = nullptr; /*CHANGE*/ }
-    | T_FALSE                                                   { $$ = nullptr; /*CHANGE*/ }
+    | T_TRUE                                                    { $$ = new Integer_constant(1); }
+    | T_FALSE                                                   { $$ = new Integer_constant(0); }
     | T_DOUBLE_CONSTANT                                         { $$ = new Double_constant($1); }
     | T_STRING_CONSTANT                                         { $$ = new String_constant(*$1); delete $1; }
     ;
