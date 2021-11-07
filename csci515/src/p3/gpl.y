@@ -187,24 +187,20 @@ const Expression* Un_op_check(const Expression* one, unsigned int valid_types) {
 %type <union_expression_ptr> primary_expression
 %type <union_expression_ptr> expression
 %type <union_expression_ptr> optional_initializer
+
+%type <union_expression_ptr> fifteen
+%type <union_expression_ptr> fourteen
+%type <union_expression_ptr> twelve
+%type <union_expression_ptr> ten
+%type <union_expression_ptr> eight
+%type <union_expression_ptr> six
+%type <union_expression_ptr> five
+%type <union_expression_ptr> four
+%type <union_expression_ptr> three
+%type <union_expression_ptr> proto_expression
+
 %type <union_expression_ptr> variable
 
-%left T_OR 
-%left T_AND
-
-%left T_EQUAL T_NOT_EQUAL
-
-%left T_LESS T_GREATER T_LESS_EQUAL T_GREATER_EQUAL
-%left T_PLUS T_MINUS
-
-%left T_MULTIPLY T_DIVIDE T_MOD
-
-%left T_NOT
-
-%nonassoc T_TOUCHES
-%nonassoc T_NEAR
-
-%nonassoc T_UNARY_OPS
 %nonassoc T_IF_NO_ELSE
 %nonassoc T_ELSE
 
@@ -553,49 +549,85 @@ variable:
 
 //---------------------------------------------------------------------
 expression:
-    primary_expression                                          { $$=$1; }
-    | expression T_OR expression                                { $$ = Bin_op_check<Or, OR>($1, $3, INT|DOUBLE ); }
-    | expression T_AND expression                               { $$ = Bin_op_check<And, AND>($1, $3, INT|DOUBLE ); }
-    | expression T_LESS_EQUAL expression                        { $$ = Bin_op_check<Less_Equal, LESS_EQUAL>($1, $3, INT|DOUBLE|STRING ); }
-    | expression T_GREATER_EQUAL  expression                    { $$ = Bin_op_check<Greater_Equal, GREATER_EQUAL>($1, $3, INT|DOUBLE|STRING ); }
-    | expression T_LESS expression                              { $$ = Bin_op_check<Less_Than, LESS_THAN>($1, $3, INT|DOUBLE|STRING ); }
-    | expression T_GREATER  expression                          { $$ = Bin_op_check<Greater_Than, GREATER_THAN>($1, $3, INT|DOUBLE|STRING ); }
-    | expression T_EQUAL expression                             { $$ = Bin_op_check<Equal, EQUAL>($1, $3, INT|DOUBLE|STRING ); }
-    | expression T_NOT_EQUAL expression                         { $$ = Bin_op_check<Not_Equal, NOT_EQUAL>($1, $3, INT|DOUBLE|STRING ); }
-    | expression T_PLUS expression                              { $$ = Bin_op_check<Plus, PLUS>($1, $3, INT|DOUBLE|STRING ); }
-    | expression T_MINUS expression                             { $$ = Bin_op_check<Minus, MINUS>($1, $3, INT|DOUBLE ); }
-    | expression T_MULTIPLY expression                          { $$ = Bin_op_check<Multiply, MULTIPLY>($1, $3, INT|DOUBLE ); }
-    | expression T_NEAR expression                              { $$ = nullptr; /*CHANGE*/ }
-    | expression T_TOUCHES expression                           { $$ = nullptr; /*CHANGE*/ }
-    | expression T_DIVIDE expression                            { 
-        if (($3->type() & (INT|DOUBLE) ) && ($3->evaluate()->as_double() == 0 )) {
-            Error::error(Error::DIVIDE_BY_ZERO_AT_PARSE_TIME);
-            delete $3;
-            delete $1;
-            $$ = new Integer_constant(0);
-        } else $$ = Bin_op_check<Divide, DIVIDE>($1, $3, INT|DOUBLE );
-    }
-    | expression T_MOD expression                               { 
-        if (($3->type() & (INT)) && ($3->evaluate()->as_int() == 0 )) {
-            Error::error(Error::MOD_BY_ZERO_AT_PARSE_TIME);
-            delete $3;
-            delete $1;
-            $$ = new Integer_constant(0);
-        } else $$ = Bin_op_check<Mod, MOD>($1, $3, INT );
-    }
-    | T_MINUS  expression %prec T_UNARY_OPS                     { $$ = Un_op_check<Unary_minus, UNARY_MINUS>($2, INT|DOUBLE ); }
-    | T_NOT  expression                                         { $$ = Un_op_check<Not, NOT>($2, INT|DOUBLE ); }
-    | T_SIN T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Sine, SIN>($3, INT|DOUBLE ); }
-    | T_COS T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Cosine, COS>($3, INT|DOUBLE ); }
-    | T_TAN T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Tan, TAN>($3, INT|DOUBLE ); }
-    | T_ASIN T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Asin, ASIN>($3, INT|DOUBLE ); }
-    | T_ACOS T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Acos, ACOS>($3, INT|DOUBLE ); }
-    | T_ATAN T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Atan, ATAN>($3, INT|DOUBLE ); }
-    | T_SQRT T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Sqrt, SQRT>($3, INT|DOUBLE ); }
-    | T_ABS T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Abs, ABS>($3, INT|DOUBLE ); }
-    | T_FLOOR T_LPAREN expression T_RPAREN                      { $$ = Un_op_check<Floor, FLOOR>($3, INT|DOUBLE ); }
-    | T_RANDOM T_LPAREN expression T_RPAREN                     { $$ = Un_op_check<Random, RANDOM>($3, INT|DOUBLE ); }
+    fifteen
     ;
+
+fifteen:
+    fourteen
+        | expression T_OR fourteen                       { $$ = Bin_op_check<Or, OR>($1, $3, INT|DOUBLE ); }
+        ;
+
+fourteen:
+    twelve
+        | fourteen T_AND twelve                     { $$ = Bin_op_check<And, AND>($1, $3, INT|DOUBLE ); }
+        ;
+
+twelve:
+    ten
+        | twelve T_EQUAL ten                       { $$ = Bin_op_check<Equal, EQUAL>($1, $3, INT|DOUBLE|STRING ); }
+        | twelve T_NOT_EQUAL ten                   { $$ = Bin_op_check<Not_Equal, NOT_EQUAL>($1, $3, INT|DOUBLE|STRING ); }
+        ;
+
+ten:
+    eight
+        | ten T_LESS eight                             { $$ = Bin_op_check<Less_Than, LESS_THAN>($1, $3, INT|DOUBLE|STRING ); }
+        | ten T_GREATER  eight                         { $$ = Bin_op_check<Greater_Than, GREATER_THAN>($1, $3, INT|DOUBLE|STRING ); }
+        | ten T_LESS_EQUAL eight                       { $$ = Bin_op_check<Less_Equal, LESS_EQUAL>($1, $3, INT|DOUBLE|STRING ); }
+        | ten T_GREATER_EQUAL  eight                   { $$ = Bin_op_check<Greater_Equal, GREATER_EQUAL>($1, $3, INT|DOUBLE|STRING ); }
+        ;
+
+eight:
+    six
+        | eight T_PLUS six                           { $$ = Bin_op_check<Plus, PLUS>($1, $3, INT|DOUBLE|STRING ); }
+        | eight T_MINUS six                          { $$ = Bin_op_check<Minus, MINUS>($1, $3, INT|DOUBLE ); }
+        ;
+
+six:
+    four
+        | six T_MULTIPLY four                         { $$ = Bin_op_check<Multiply, MULTIPLY>($1, $3, INT|DOUBLE ); }
+        | six T_DIVIDE four                           { 
+            if (($3->type() & (INT|DOUBLE) ) && ($3->evaluate()->as_double() == 0 )) {
+                Error::error(Error::DIVIDE_BY_ZERO_AT_PARSE_TIME);
+                delete $3;
+                delete $1;
+                $$ = new Integer_constant(0);
+            } else $$ = Bin_op_check<Divide, DIVIDE>($1, $3, INT|DOUBLE );
+        }
+        | six T_MOD four                               { 
+            if (($3->type() & (INT)) && ($3->evaluate()->as_int() == 0 )) {
+                Error::error(Error::MOD_BY_ZERO_AT_PARSE_TIME);
+                delete $3;
+                delete $1;
+                $$ = new Integer_constant(0);
+            } else $$ = Bin_op_check<Mod, MOD>($1, $3, INT );
+        }
+        ;
+
+four:
+    three
+        | T_NOT  four                                         { $$ = Un_op_check<Not, NOT>($2, INT|DOUBLE ); }
+        | T_MINUS  four                                       { $$ = Un_op_check<Unary_minus, UNARY_MINUS>($2, INT|DOUBLE ); }
+        ;
+
+three:
+    proto_expression
+        | three T_TOUCHES proto_expression                          { $$ = nullptr; /*CHANGE*/ }
+        | three T_NEAR proto_expression                             { $$ = nullptr; /*CHANGE*/ }
+        ;
+
+proto_expression:
+        primary_expression                                          { $$=$1; }
+        | T_SIN T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Sine, SIN>($3, INT|DOUBLE ); }
+        | T_COS T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Cosine, COS>($3, INT|DOUBLE ); }
+        | T_TAN T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Tan, TAN>($3, INT|DOUBLE ); }
+        | T_ASIN T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Asin, ASIN>($3, INT|DOUBLE ); }
+        | T_ACOS T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Acos, ACOS>($3, INT|DOUBLE ); }
+        | T_ATAN T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Atan, ATAN>($3, INT|DOUBLE ); }
+        | T_SQRT T_LPAREN expression T_RPAREN                       { $$ = Un_op_check<Sqrt, SQRT>($3, INT|DOUBLE ); }
+        | T_ABS T_LPAREN expression T_RPAREN                        { $$ = Un_op_check<Abs, ABS>($3, INT|DOUBLE ); }
+        | T_FLOOR T_LPAREN expression T_RPAREN                      { $$ = Un_op_check<Floor, FLOOR>($3, INT|DOUBLE ); }
+        | T_RANDOM T_LPAREN expression T_RPAREN                     { $$ = Un_op_check<Random, RANDOM>($3, INT|DOUBLE ); }
+        ;
 
 //---------------------------------------------------------------------
 primary_expression:
@@ -613,3 +645,4 @@ empty:
     // empty goes to nothing so that you can use empty in productions
     // when you want a production to go to nothing
     ;
+%%
