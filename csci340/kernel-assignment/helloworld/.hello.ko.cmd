@@ -1,1 +1,0 @@
-cmd_/home/atreya/Desktop/school/csci340/kernel-assignment/helloworld/hello.ko := ld -r -m elf_x86_64  --build-id=sha1  -T scripts/module.lds -o /home/atreya/Desktop/school/csci340/kernel-assignment/helloworld/hello.ko /home/atreya/Desktop/school/csci340/kernel-assignment/helloworld/hello.o /home/atreya/Desktop/school/csci340/kernel-assignment/helloworld/hello.mod.o;  true

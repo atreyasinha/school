@@ -1,1 +1,0 @@
-cmd_/home/atreya/Desktop/school/csci340/kernel-assignment/src/numpagefaults.mod := { echo  /home/atreya/Desktop/school/csci340/kernel-assignment/src/numpagefaults.o;  echo; } > /home/atreya/Desktop/school/csci340/kernel-assignment/src/numpagefaults.mod

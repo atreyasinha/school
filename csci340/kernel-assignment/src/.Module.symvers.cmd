@@ -1,1 +1,0 @@
-cmd_/home/atreya/Desktop/school/csci340/kernel-assignment/src/Module.symvers := sed 's/ko$$/o/' /home/atreya/Desktop/school/csci340/kernel-assignment/src/modules.order | scripts/mod/modpost -m -a   -o /home/atreya/Desktop/school/csci340/kernel-assignment/src/Module.symvers -e -i Module.symvers   -T -

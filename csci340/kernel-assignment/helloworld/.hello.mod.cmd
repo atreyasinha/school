@@ -1,1 +1,0 @@
-cmd_/home/atreya/Desktop/school/csci340/kernel-assignment/helloworld/hello.mod := { echo  /home/atreya/Desktop/school/csci340/kernel-assignment/helloworld/hello.o;  echo; } > /home/atreya/Desktop/school/csci340/kernel-assignment/helloworld/hello.mod
