@@ -436,9 +436,6 @@ const Constant* Random::evaluate() const
 
 Gpl_type Random::type() const
 {
-  Gpl_type rht = rhs->type();
-  if (rht == STRING) return STRING;
-  if (rht == DOUBLE) return DOUBLE;
   return INT;
 }
 
