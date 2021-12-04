@@ -189,7 +189,7 @@ For::~For() {
 
 void Exit::execute() const
 {
-    cout << "gpl[" << line_number << "]: exit(" << argument->evaluate()->as_int() << endl;
+    cout << "gpl[" << line_number << "]: exit(" << argument->evaluate()->as_int() << ")"<< endl;
     exit(argument->evaluate()->as_int());
     if (next != nullptr)              next->execute();
 }

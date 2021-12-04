@@ -13,6 +13,7 @@ class Member_variable : public Variable {
         virtual const Constant* evaluate() const override;
         virtual std::shared_ptr<Locator> modify() const override;
         virtual Gpl_type type() const override;
+        virtual std::string name() const;       
 };
 
 #endif

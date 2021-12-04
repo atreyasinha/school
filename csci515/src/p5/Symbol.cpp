@@ -324,15 +324,15 @@ std::shared_ptr<Locator> Symbol::as_lvalue(int index) const {
 std::shared_ptr<Locator> Symbol::as_lvalue(const std::string& attribute_name) const {
     switch (type) {
         case RECTANGLE:
-            return std::make_shared<Locator>(Game_attribute_locator(value.rectangle_pointer, attribute_name));
+            return std::make_shared<Game_attribute_locator>(value.rectangle_pointer, attribute_name);
         case CIRCLE:
-            return std::make_shared<Locator>(Game_attribute_locator(value.circle_pointer, attribute_name));
+            return std::make_shared<Game_attribute_locator>(value.circle_pointer, attribute_name);
         case TRIANGLE:
-            return std::make_shared<Locator>(Game_attribute_locator(value.triangle_pointer, attribute_name));
+            return std::make_shared<Game_attribute_locator>(value.triangle_pointer, attribute_name);
         case PIXMAP:
-            return std::make_shared<Locator>(Game_attribute_locator(value.pixmap_pointer, attribute_name));
+            return std::make_shared<Game_attribute_locator>(value.pixmap_pointer, attribute_name);
         case TEXTBOX:
-            return std::make_shared<Locator>(Game_attribute_locator(value.textbox_pointer, attribute_name));
+            return std::make_shared<Game_attribute_locator>(value.textbox_pointer, attribute_name);
 
         default:
             throw type;
@@ -345,15 +345,15 @@ std::shared_ptr<Locator> Symbol::as_lvalue(int index, const std::string& attribu
 
     switch (type) {
         case RECTANGLE:
-            return std::make_shared<Locator>(Game_attribute_locator(value.rectangle_pointer + index, attribute_name));
+            return std::make_shared<Game_attribute_locator>(value.rectangle_pointer + index, attribute_name);
         case CIRCLE:
-            return std::make_shared<Locator>(Game_attribute_locator(value.circle_pointer + index, attribute_name));
+            return std::make_shared<Game_attribute_locator>(value.circle_pointer + index, attribute_name);
         case TRIANGLE:
-            return std::make_shared<Locator>(Game_attribute_locator(value.triangle_pointer + index, attribute_name));
+            return std::make_shared<Game_attribute_locator>(value.triangle_pointer + index, attribute_name);
         case PIXMAP:
-            return std::make_shared<Locator>(Game_attribute_locator(value.pixmap_pointer + index, attribute_name));
+            return std::make_shared<Game_attribute_locator>(value.pixmap_pointer + index, attribute_name);
         case TEXTBOX:
-            return std::make_shared<Locator>(Game_attribute_locator(value.textbox_pointer + index, attribute_name));
+            return std::make_shared<Game_attribute_locator>(value.textbox_pointer + index, attribute_name);
 
         default:
             throw type;

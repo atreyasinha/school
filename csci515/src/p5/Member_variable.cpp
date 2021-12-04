@@ -13,6 +13,10 @@ Gpl_type Member_variable::type() const {
     return symbol()->as_constant(attribute)->type();
 }
 
+std::string Member_variable::name() const { 
+    return (symbol_name == "") ? "" : symbol_name + "." + attribute; 
+}
+
 const Constant* Member_variable::evaluate() const { 
     if (symbol_name.empty())                        return ret(new Game_attribute_constant(0, ""));
 
