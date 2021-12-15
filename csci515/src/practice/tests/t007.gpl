@@ -1,0 +1,11 @@
+//Incrementing a negative number. Shouldn't be any big deal.
+int counter=-15;
+on akey
+{
+
+  repeat {
+    print("Counting up: " + counter);
+    counter++;
+  } until(counter > -10);
+
+}

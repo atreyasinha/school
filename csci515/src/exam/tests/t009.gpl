@@ -1,0 +1,2 @@
+string scifi = 0 ? "THX" : 1138;
+string song =  0 ? 99 : "luftballoons";

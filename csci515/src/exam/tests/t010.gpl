@@ -1,0 +1,5 @@
+circle wheel;
+triangle pyramid;
+textbox banner;
+double scifi = 1 ? pyramid : wheel;
+double song =  1 ? banner : 1234;

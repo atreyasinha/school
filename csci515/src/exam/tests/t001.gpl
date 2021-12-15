@@ -1,0 +1,4 @@
+on akey
+{
+    print("a single statement");
+}

@@ -1,0 +1,3 @@
+//syntax errors
+int a = 3;
+double trouble = a > 4 ? 3.14;

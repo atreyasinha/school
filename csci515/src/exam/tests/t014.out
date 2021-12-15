@@ -1,0 +1,33 @@
+gpl.cpp::main()
+  input file(tests/t014.gpl)
+  random seed(42)
+  read_keypresses_from_standard_input(true)
+  dump_pixels(false)
+  symbol_table(true)
+  graphics(true)
+
+gpl.cpp::main() Calling yyparse()
+
+
+gpl.cpp::main() after call to yyparse().
+
+
+Printing the symbol table from main()
+int i = 3
+gpl.cpp::main() Calling window->initialize().
+
+
+gpl.cpp::main() Passing control to window->main_loop().
+print[6]: looping 0
+print[6]: looping 1
+print[6]: looping 2
+print[6]: looping 3
+print[6]: looping 4
+print[6]: looping 5
+print[6]: looping 6
+print[6]: looping 7
+print[6]: looping 8
+print[6]: looping 9
+
+User quit program. Printing the symbol table.
+int i = 10

@@ -1,0 +1,16 @@
+//Error, Incorrect type for condition
+//This error does not currently exist in the Error class.
+//An additional error case must be added to handle this
+//error. Refer to the test's error file for the expected
+//error text.
+circle hoop;
+int counter=5;
+on akey
+{
+
+  repeat {
+    print("Counting down: " + counter);
+    counter--;
+  } until(hoop);
+
+}

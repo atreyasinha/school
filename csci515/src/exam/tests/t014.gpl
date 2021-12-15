@@ -1,0 +1,7 @@
+//syntax errors
+int i = 3;
+
+on akey {
+  for(i=0; i < 10 ? true : false; i++)
+    print("looping " + i);
+}

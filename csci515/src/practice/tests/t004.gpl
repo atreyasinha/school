@@ -1,0 +1,12 @@
+//Syntax error. If the repeat-until statement was implemented correctly 
+//the parser will report this syntax error automatically
+int counter=5;
+on akey
+{
+
+  repeat
+    counter--;
+    print("Counting down: " + counter);
+  until(counter==0);
+
+}

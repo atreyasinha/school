@@ -1,0 +1,10 @@
+//repeat-until is similar to a do-while. It will execute body at least once.
+int counter=0;
+on akey
+{
+
+  repeat {
+    print("Counter is hard-coded to zero. Print this message once");
+  } until(counter==0);
+
+}

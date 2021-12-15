@@ -1,0 +1,3 @@
+//syntax errors
+int a = 3;
+double dribble = a : 4;

@@ -1,0 +1,1 @@
+Semantic error on line 2: Invalid type ('circle') for ternary condition. Type must be integer or double.

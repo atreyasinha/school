@@ -1,0 +1,19 @@
+//nested repeat-until statements
+int count_down=5;
+int count_up=0;
+on akey
+{
+
+  repeat {
+      print("Outer count down: " + count_down);
+    count_down--;
+
+    repeat {
+      count_up++;
+      print("  Count up: " + count_up);
+    } until(count_up==3);
+
+    count_up=0;
+  } until(count_down==0);
+
+}

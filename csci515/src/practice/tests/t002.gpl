@@ -1,0 +1,16 @@
+//repeat-until on a single statement without curly-braces
+circle wheel;
+
+on akey
+{
+
+  print("Moving x");
+  repeat
+    wheel.x+=10;
+  until(wheel.x == 100);
+  print("Moving y");
+  repeat
+    wheel.y+=10;
+  until(wheel.y == 100);
+
+}

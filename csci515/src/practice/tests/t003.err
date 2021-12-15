@@ -1,0 +1,1 @@
+Semantic error on line 14: Incorrect type for expression in a repeat-until statement.  Expressions in repeat-until statements must be of type INT.

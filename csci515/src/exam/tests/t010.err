@@ -1,0 +1,2 @@
+Semantic error on line 4: Incompatible operand types for ternary operator ('triangle' and 'circle')
+Semantic error on line 5: Incompatible operand types for ternary operator ('textbox' and 'int')

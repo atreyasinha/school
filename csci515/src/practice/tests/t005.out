@@ -1,0 +1,45 @@
+gpl.cpp::main()
+  input file(tests/t005.gpl)
+  random seed(42)
+  read_keypresses_from_standard_input(true)
+  dump_pixels(false)
+  symbol_table(true)
+  graphics(true)
+
+gpl.cpp::main() Calling yyparse()
+
+
+gpl.cpp::main() after call to yyparse().
+
+
+Printing the symbol table from main()
+int count_down = 5
+int count_up = 0
+gpl.cpp::main() Calling window->initialize().
+
+
+gpl.cpp::main() Passing control to window->main_loop().
+print[8]: Outer count down: 5
+print[13]:   Count up: 1
+print[13]:   Count up: 2
+print[13]:   Count up: 3
+print[8]: Outer count down: 4
+print[13]:   Count up: 1
+print[13]:   Count up: 2
+print[13]:   Count up: 3
+print[8]: Outer count down: 3
+print[13]:   Count up: 1
+print[13]:   Count up: 2
+print[13]:   Count up: 3
+print[8]: Outer count down: 2
+print[13]:   Count up: 1
+print[13]:   Count up: 2
+print[13]:   Count up: 3
+print[8]: Outer count down: 1
+print[13]:   Count up: 1
+print[13]:   Count up: 2
+print[13]:   Count up: 3
+
+User quit program. Printing the symbol table.
+int count_down = 0
+int count_up = 0

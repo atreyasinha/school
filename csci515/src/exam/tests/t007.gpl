@@ -1,0 +1,4 @@
+int a=4444;
+double q = a > 5   ? 99 : 88;
+double r = a < 5   ? 99.9 : 88.8;
+string name = q>r ? "bilbo" : "baggins";

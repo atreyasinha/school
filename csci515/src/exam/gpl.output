@@ -1,0 +1,3703 @@
+Terminals unused in grammar
+
+    "zkey"
+    "?"
+    ":"
+    "error"
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: declaration_list block_list
+
+    2 declaration_list: declaration_list declaration
+    3                 | empty
+
+    4 declaration: variable_declaration ";"
+    5            | object_declaration ";"
+    6            | forward_declaration ";"
+
+    7 variable_declaration: simple_type "identifier" optional_initializer
+    8                     | simple_type "identifier" "[" expression "]"
+
+    9 simple_type: "int"
+   10            | "double"
+   11            | "string"
+
+   12 optional_initializer: "=" expression
+   13                     | empty
+
+   14 object_declaration: object_type "identifier" parameter_list_or_empty
+   15                   | object_type "identifier" "[" expression "]"
+
+   16 object_type: "triangle"
+   17            | "pixmap"
+   18            | "circle"
+   19            | "rectangle"
+   20            | "textbox"
+
+   21 parameter_list_or_empty: "(" parameter_list ")"
+   22                        | "(" empty ")"
+   23                        | empty
+
+   24 parameter_list: parameter "," parameter_list
+   25               | parameter
+
+   26 parameter: "identifier" "=" expression
+
+   27 block_list: block_list block
+   28           | empty
+
+   29 block: initialization_block
+   30      | termination_block
+   31      | animation_block
+   32      | on_block
+
+   33 initialization_block: "initialization" statement_block
+
+   34 termination_block: "termination" statement_block
+
+   35 forward_declaration: "forward" "animation" "identifier" "(" animation_parameter ")"
+
+   36 animation_parameter: object_type "identifier"
+   37                    | object_type
+
+   38 animation_block: animation_declaration statement_block
+
+   39 animation_declaration: "animation" "identifier" "(" object_type "identifier" ")"
+
+   40 on_block: "on" keystroke statement_block
+
+   41 keystroke: "space"
+   42          | "uparrow"
+   43          | "downarrow"
+   44          | "leftarrow"
+   45          | "rightarrow"
+   46          | "leftmouse_down"
+   47          | "middlemouse_down"
+   48          | "rightmouse_down"
+   49          | "leftmouse_up"
+   50          | "middlemouse_up"
+   51          | "rightmouse_up"
+   52          | "mouse_move"
+   53          | "mouse_drag"
+   54          | "akey"
+   55          | "skey"
+   56          | "dkey"
+   57          | "fkey"
+   58          | "hkey"
+   59          | "jkey"
+   60          | "kkey"
+   61          | "lkey"
+   62          | "wkey"
+   63          | "f1"
+
+   64 statement_or_block_of_statements: statement_block
+   65                                 | statement
+
+   66 statement_block: "{" statement_list "}"
+   67                | "{" "}"
+
+   68 statement_list: statement statement_list
+   69               | statement
+
+   70 statement: if_statement
+   71          | for_statement
+   72          | assign_statement ";"
+   73          | print_statement ";"
+   74          | exit_statement ";"
+
+   75 if_statement: "if" "(" expression ")" statement_or_block_of_statements
+   76             | "if" "(" expression ")" statement_or_block_of_statements "else" statement_or_block_of_statements
+
+   77 for_statement: "for" "(" assign_statement_or_empty ";" expression ";" assign_statement_or_empty ")" statement_or_block_of_statements
+
+   78 print_statement: "print" "(" expression ")"
+
+   79 exit_statement: "exit" "(" expression ")"
+
+   80 assign_statement_or_empty: assign_statement
+   81                          | empty
+
+   82 assign_statement: variable "=" expression
+   83                 | variable "+=" expression
+   84                 | variable "-=" expression
+   85                 | variable "++"
+   86                 | variable "--"
+
+   87 variable: "identifier"
+   88         | "identifier" "[" expression "]"
+   89         | "identifier" "." "identifier"
+   90         | "identifier" "[" expression "]" "." "identifier"
+
+   91 expression: fifteen
+
+   92 fifteen: fourteen
+   93        | expression "||" fourteen
+
+   94 fourteen: twelve
+   95         | fourteen "&&" twelve
+
+   96 twelve: ten
+   97       | twelve "==" ten
+   98       | twelve "!=" ten
+
+   99 ten: eight
+  100    | ten "<" eight
+  101    | ten ">" eight
+  102    | ten "<=" eight
+  103    | ten ">=" eight
+
+  104 eight: six
+  105      | eight "+" six
+  106      | eight "-" six
+
+  107 six: four
+  108    | six "*" four
+  109    | six "/" four
+  110    | six "%" four
+
+  111 four: three
+  112     | "!" four
+  113     | "-" four
+
+  114 three: proto_expression
+  115      | three "touches" proto_expression
+  116      | three "near" proto_expression
+
+  117 proto_expression: primary_expression
+  118                 | "sin" "(" expression ")"
+  119                 | "cos" "(" expression ")"
+  120                 | "tan" "(" expression ")"
+  121                 | "asin" "(" expression ")"
+  122                 | "acos" "(" expression ")"
+  123                 | "atan" "(" expression ")"
+  124                 | "sqrt" "(" expression ")"
+  125                 | "abs" "(" expression ")"
+  126                 | "floor" "(" expression ")"
+  127                 | "random" "(" expression ")"
+
+  128 primary_expression: "(" expression ")"
+  129                   | variable
+  130                   | "int constant"
+  131                   | "true"
+  132                   | "false"
+  133                   | "double constant"
+  134                   | "string constant"
+
+  135 empty: ε
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    "int" (258) 9
+    "double" (259) 10
+    "string" (260) 11
+    "triangle" (261) 16
+    "pixmap" (262) 17
+    "circle" (263) 18
+    "rectangle" (264) 19
+    "textbox" (265) 20
+    "forward" (266) 35
+    "initialization" (267) 33
+    "termination" (268) 34
+    "on" (269) 40
+    "animation" (270) 35 39
+    "if" (271) 75 76
+    "for" (272) 77
+    "else" (273) 76
+    "exit" <union_int> (274) 79
+    "print" <union_int> (275) 78
+    "true" (276) 131
+    "false" (277) 132
+    "space" (278) 41
+    "leftarrow" (279) 44
+    "rightarrow" (280) 45
+    "uparrow" (281) 42
+    "downarrow" (282) 43
+    "leftmouse_down" (283) 46
+    "middlemouse_down" (284) 47
+    "rightmouse_down" (285) 48
+    "leftmouse_up" (286) 49
+    "middlemouse_up" (287) 50
+    "rightmouse_up" (288) 51
+    "mouse_move" (289) 52
+    "mouse_drag" (290) 53
+    "f1" (291) 63
+    "akey" (292) 54
+    "skey" (293) 55
+    "dkey" (294) 56
+    "fkey" (295) 57
+    "hkey" (296) 58
+    "jkey" (297) 59
+    "kkey" (298) 60
+    "lkey" (299) 61
+    "wkey" (300) 62
+    "zkey" (301)
+    "(" (302) 21 22 35 39 75 76 77 78 79 118 119 120 121 122 123 124 125 126 127 128
+    ")" (303) 21 22 35 39 75 76 77 78 79 118 119 120 121 122 123 124 125 126 127 128
+    "{" (304) 66 67
+    "}" (305) 66 67
+    "[" (306) 8 15 88 90
+    "]" (307) 8 15 88 90
+    ";" (308) 4 5 6 72 73 74 77
+    "," (309) 24
+    "." (310) 89 90
+    "=" (311) 12 26 82
+    "+=" (312) 83
+    "-=" (313) 84
+    "++" (314) 85
+    "--" (315) 86
+    "sin" (316) 118
+    "cos" (317) 119
+    "tan" (318) 120
+    "asin" (319) 121
+    "acos" (320) 122
+    "atan" (321) 123
+    "sqrt" (322) 124
+    "abs" (323) 125
+    "floor" (324) 126
+    "random" (325) 127
+    "touches" (326) 115
+    "near" (327) 116
+    "*" (328) 108
+    "/" (329) 109
+    "+" (330) 105
+    "-" (331) 106 113
+    "%" (332) 110
+    "<" (333) 100
+    ">" (334) 101
+    "<=" (335) 102
+    ">=" (336) 103
+    "==" (337) 97
+    "!=" (338) 98
+    "!" (339) 112
+    "&&" (340) 95
+    "||" (341) 93
+    "?" (342)
+    ":" (343)
+    "int constant" <union_int> (344) 130
+    "double constant" <union_double> (345) 133
+    "string constant" <union_string> (346) 134
+    "identifier" <union_string> (347) 7 8 14 15 26 35 36 39 87 88 89 90
+    "error" (348)
+    T_IF_NO_ELSE (349)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (95)
+        on left: 0
+    program (96)
+        on left: 1
+        on right: 0
+    declaration_list (97)
+        on left: 2 3
+        on right: 1 2
+    declaration (98)
+        on left: 4 5 6
+        on right: 2
+    variable_declaration (99)
+        on left: 7 8
+        on right: 4
+    simple_type <union_gpl_type> (100)
+        on left: 9 10 11
+        on right: 7 8
+    optional_initializer <union_expression_ptr> (101)
+        on left: 12 13
+        on right: 7
+    object_declaration (102)
+        on left: 14 15
+        on right: 5
+    object_type <union_gpl_type> (103)
+        on left: 16 17 18 19 20
+        on right: 14 15 36 37 39
+    parameter_list_or_empty <union_parameter_ptr> (104)
+        on left: 21 22 23
+        on right: 14
+    parameter_list <union_parameter_ptr> (105)
+        on left: 24 25
+        on right: 21 24
+    parameter <union_parameter_ptr> (106)
+        on left: 26
+        on right: 24 25
+    block_list (107)
+        on left: 27 28
+        on right: 1 27
+    block (108)
+        on left: 29 30 31 32
+        on right: 27
+    initialization_block (109)
+        on left: 33
+        on right: 29
+    termination_block (110)
+        on left: 34
+        on right: 30
+    forward_declaration (111)
+        on left: 35
+        on right: 6
+    animation_parameter (112)
+        on left: 36 37
+        on right: 35
+    animation_block (113)
+        on left: 38
+        on right: 31
+    animation_declaration (114)
+        on left: 39
+        on right: 38
+    on_block <union_statement_ptr> (115)
+        on left: 40
+        on right: 32
+    keystroke <union_keystroke> (116)
+        on left: 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
+        on right: 40
+    statement_or_block_of_statements <union_statement_ptr> (117)
+        on left: 64 65
+        on right: 75 76 77
+    statement_block <union_statement_ptr> (118)
+        on left: 66 67
+        on right: 33 34 38 40 64
+    statement_list <union_statement_ptr> (119)
+        on left: 68 69
+        on right: 66 68
+    statement <union_statement_ptr> (120)
+        on left: 70 71 72 73 74
+        on right: 65 68 69
+    if_statement <union_statement_ptr> (121)
+        on left: 75 76
+        on right: 70
+    for_statement <union_statement_ptr> (122)
+        on left: 77
+        on right: 71
+    print_statement <union_statement_ptr> (123)
+        on left: 78
+        on right: 73
+    exit_statement <union_statement_ptr> (124)
+        on left: 79
+        on right: 74
+    assign_statement_or_empty <union_statement_ptr> (125)
+        on left: 80 81
+        on right: 77
+    assign_statement <union_statement_ptr> (126)
+        on left: 82 83 84 85 86
+        on right: 72 80
+    variable <union_variable_ptr> (127)
+        on left: 87 88 89 90
+        on right: 82 83 84 85 86 129
+    expression <union_expression_ptr> (128)
+        on left: 91
+        on right: 8 12 15 26 75 76 77 78 79 82 83 84 88 90 93 118 119 120 121 122 123 124 125 126 127 128
+    fifteen <union_expression_ptr> (129)
+        on left: 92 93
+        on right: 91
+    fourteen <union_expression_ptr> (130)
+        on left: 94 95
+        on right: 92 93 95
+    twelve <union_expression_ptr> (131)
+        on left: 96 97 98
+        on right: 94 95 97 98
+    ten <union_expression_ptr> (132)
+        on left: 99 100 101 102 103
+        on right: 96 97 98 100 101 102 103
+    eight <union_expression_ptr> (133)
+        on left: 104 105 106
+        on right: 99 100 101 102 103 105 106
+    six <union_expression_ptr> (134)
+        on left: 107 108 109 110
+        on right: 104 105 106 108 109 110
+    four <union_expression_ptr> (135)
+        on left: 111 112 113
+        on right: 107 108 109 110 112 113
+    three <union_expression_ptr> (136)
+        on left: 114 115 116
+        on right: 111 115 116
+    proto_expression <union_expression_ptr> (137)
+        on left: 117 118 119 120 121 122 123 124 125 126 127
+        on right: 114 115 116
+    primary_expression <union_expression_ptr> (138)
+        on left: 128 129 130 131 132 133 134
+        on right: 117
+    empty (139)
+        on left: 135
+        on right: 3 13 22 23 28 81
+
+
+State 0
+
+    0 $accept: • program $end
+
+    $default  reduce using rule 135 (empty)
+
+    program           go to state 1
+    declaration_list  go to state 2
+    empty             go to state 3
+
+
+State 1
+
+    0 $accept: program • $end
+
+    $end  shift, and go to state 4
+
+
+State 2
+
+    1 program: declaration_list • block_list
+    2 declaration_list: declaration_list • declaration
+
+    "int"        shift, and go to state 5
+    "double"     shift, and go to state 6
+    "string"     shift, and go to state 7
+    "triangle"   shift, and go to state 8
+    "pixmap"     shift, and go to state 9
+    "circle"     shift, and go to state 10
+    "rectangle"  shift, and go to state 11
+    "textbox"    shift, and go to state 12
+    "forward"    shift, and go to state 13
+
+    $default  reduce using rule 135 (empty)
+
+    declaration           go to state 14
+    variable_declaration  go to state 15
+    simple_type           go to state 16
+    object_declaration    go to state 17
+    object_type           go to state 18
+    block_list            go to state 19
+    forward_declaration   go to state 20
+    empty                 go to state 21
+
+
+State 3
+
+    3 declaration_list: empty •
+
+    $default  reduce using rule 3 (declaration_list)
+
+
+State 4
+
+    0 $accept: program $end •
+
+    $default  accept
+
+
+State 5
+
+    9 simple_type: "int" •
+
+    $default  reduce using rule 9 (simple_type)
+
+
+State 6
+
+   10 simple_type: "double" •
+
+    $default  reduce using rule 10 (simple_type)
+
+
+State 7
+
+   11 simple_type: "string" •
+
+    $default  reduce using rule 11 (simple_type)
+
+
+State 8
+
+   16 object_type: "triangle" •
+
+    $default  reduce using rule 16 (object_type)
+
+
+State 9
+
+   17 object_type: "pixmap" •
+
+    $default  reduce using rule 17 (object_type)
+
+
+State 10
+
+   18 object_type: "circle" •
+
+    $default  reduce using rule 18 (object_type)
+
+
+State 11
+
+   19 object_type: "rectangle" •
+
+    $default  reduce using rule 19 (object_type)
+
+
+State 12
+
+   20 object_type: "textbox" •
+
+    $default  reduce using rule 20 (object_type)
+
+
+State 13
+
+   35 forward_declaration: "forward" • "animation" "identifier" "(" animation_parameter ")"
+
+    "animation"  shift, and go to state 22
+
+
+State 14
+
+    2 declaration_list: declaration_list declaration •
+
+    $default  reduce using rule 2 (declaration_list)
+
+
+State 15
+
+    4 declaration: variable_declaration • ";"
+
+    ";"  shift, and go to state 23
+
+
+State 16
+
+    7 variable_declaration: simple_type • "identifier" optional_initializer
+    8                     | simple_type • "identifier" "[" expression "]"
+
+    "identifier"  shift, and go to state 24
+
+
+State 17
+
+    5 declaration: object_declaration • ";"
+
+    ";"  shift, and go to state 25
+
+
+State 18
+
+   14 object_declaration: object_type • "identifier" parameter_list_or_empty
+   15                   | object_type • "identifier" "[" expression "]"
+
+    "identifier"  shift, and go to state 26
+
+
+State 19
+
+    1 program: declaration_list block_list •
+   27 block_list: block_list • block
+
+    "initialization"  shift, and go to state 27
+    "termination"     shift, and go to state 28
+    "on"              shift, and go to state 29
+    "animation"       shift, and go to state 30
+
+    $default  reduce using rule 1 (program)
+
+    block                  go to state 31
+    initialization_block   go to state 32
+    termination_block      go to state 33
+    animation_block        go to state 34
+    animation_declaration  go to state 35
+    on_block               go to state 36
+
+
+State 20
+
+    6 declaration: forward_declaration • ";"
+
+    ";"  shift, and go to state 37
+
+
+State 21
+
+   28 block_list: empty •
+
+    $default  reduce using rule 28 (block_list)
+
+
+State 22
+
+   35 forward_declaration: "forward" "animation" • "identifier" "(" animation_parameter ")"
+
+    "identifier"  shift, and go to state 38
+
+
+State 23
+
+    4 declaration: variable_declaration ";" •
+
+    $default  reduce using rule 4 (declaration)
+
+
+State 24
+
+    7 variable_declaration: simple_type "identifier" • optional_initializer
+    8                     | simple_type "identifier" • "[" expression "]"
+
+    "["  shift, and go to state 39
+    "="  shift, and go to state 40
+
+    $default  reduce using rule 135 (empty)
+
+    optional_initializer  go to state 41
+    empty                 go to state 42
+
+
+State 25
+
+    5 declaration: object_declaration ";" •
+
+    $default  reduce using rule 5 (declaration)
+
+
+State 26
+
+   14 object_declaration: object_type "identifier" • parameter_list_or_empty
+   15                   | object_type "identifier" • "[" expression "]"
+
+    "("  shift, and go to state 43
+    "["  shift, and go to state 44
+
+    $default  reduce using rule 135 (empty)
+
+    parameter_list_or_empty  go to state 45
+    empty                    go to state 46
+
+
+State 27
+
+   33 initialization_block: "initialization" • statement_block
+
+    "{"  shift, and go to state 47
+
+    statement_block  go to state 48
+
+
+State 28
+
+   34 termination_block: "termination" • statement_block
+
+    "{"  shift, and go to state 47
+
+    statement_block  go to state 49
+
+
+State 29
+
+   40 on_block: "on" • keystroke statement_block
+
+    "space"             shift, and go to state 50
+    "leftarrow"         shift, and go to state 51
+    "rightarrow"        shift, and go to state 52
+    "uparrow"           shift, and go to state 53
+    "downarrow"         shift, and go to state 54
+    "leftmouse_down"    shift, and go to state 55
+    "middlemouse_down"  shift, and go to state 56
+    "rightmouse_down"   shift, and go to state 57
+    "leftmouse_up"      shift, and go to state 58
+    "middlemouse_up"    shift, and go to state 59
+    "rightmouse_up"     shift, and go to state 60
+    "mouse_move"        shift, and go to state 61
+    "mouse_drag"        shift, and go to state 62
+    "f1"                shift, and go to state 63
+    "akey"              shift, and go to state 64
+    "skey"              shift, and go to state 65
+    "dkey"              shift, and go to state 66
+    "fkey"              shift, and go to state 67
+    "hkey"              shift, and go to state 68
+    "jkey"              shift, and go to state 69
+    "kkey"              shift, and go to state 70
+    "lkey"              shift, and go to state 71
+    "wkey"              shift, and go to state 72
+
+    keystroke  go to state 73
+
+
+State 30
+
+   39 animation_declaration: "animation" • "identifier" "(" object_type "identifier" ")"
+
+    "identifier"  shift, and go to state 74
+
+
+State 31
+
+   27 block_list: block_list block •
+
+    $default  reduce using rule 27 (block_list)
+
+
+State 32
+
+   29 block: initialization_block •
+
+    $default  reduce using rule 29 (block)
+
+
+State 33
+
+   30 block: termination_block •
+
+    $default  reduce using rule 30 (block)
+
+
+State 34
+
+   31 block: animation_block •
+
+    $default  reduce using rule 31 (block)
+
+
+State 35
+
+   38 animation_block: animation_declaration • statement_block
+
+    "{"  shift, and go to state 47
+
+    statement_block  go to state 75
+
+
+State 36
+
+   32 block: on_block •
+
+    $default  reduce using rule 32 (block)
+
+
+State 37
+
+    6 declaration: forward_declaration ";" •
+
+    $default  reduce using rule 6 (declaration)
+
+
+State 38
+
+   35 forward_declaration: "forward" "animation" "identifier" • "(" animation_parameter ")"
+
+    "("  shift, and go to state 76
+
+
+State 39
+
+    8 variable_declaration: simple_type "identifier" "[" • expression "]"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 97
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 40
+
+   12 optional_initializer: "=" • expression
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 108
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 41
+
+    7 variable_declaration: simple_type "identifier" optional_initializer •
+
+    $default  reduce using rule 7 (variable_declaration)
+
+
+State 42
+
+   13 optional_initializer: empty •
+
+    $default  reduce using rule 13 (optional_initializer)
+
+
+State 43
+
+   21 parameter_list_or_empty: "(" • parameter_list ")"
+   22                        | "(" • empty ")"
+
+    "identifier"  shift, and go to state 109
+
+    $default  reduce using rule 135 (empty)
+
+    parameter_list  go to state 110
+    parameter       go to state 111
+    empty           go to state 112
+
+
+State 44
+
+   15 object_declaration: object_type "identifier" "[" • expression "]"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 113
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 45
+
+   14 object_declaration: object_type "identifier" parameter_list_or_empty •
+
+    $default  reduce using rule 14 (object_declaration)
+
+
+State 46
+
+   23 parameter_list_or_empty: empty •
+
+    $default  reduce using rule 23 (parameter_list_or_empty)
+
+
+State 47
+
+   66 statement_block: "{" • statement_list "}"
+   67                | "{" • "}"
+
+    "if"          shift, and go to state 114
+    "for"         shift, and go to state 115
+    "exit"        shift, and go to state 116
+    "print"       shift, and go to state 117
+    "}"           shift, and go to state 118
+    "identifier"  shift, and go to state 95
+
+    statement_list    go to state 119
+    statement         go to state 120
+    if_statement      go to state 121
+    for_statement     go to state 122
+    print_statement   go to state 123
+    exit_statement    go to state 124
+    assign_statement  go to state 125
+    variable          go to state 126
+
+
+State 48
+
+   33 initialization_block: "initialization" statement_block •
+
+    $default  reduce using rule 33 (initialization_block)
+
+
+State 49
+
+   34 termination_block: "termination" statement_block •
+
+    $default  reduce using rule 34 (termination_block)
+
+
+State 50
+
+   41 keystroke: "space" •
+
+    $default  reduce using rule 41 (keystroke)
+
+
+State 51
+
+   44 keystroke: "leftarrow" •
+
+    $default  reduce using rule 44 (keystroke)
+
+
+State 52
+
+   45 keystroke: "rightarrow" •
+
+    $default  reduce using rule 45 (keystroke)
+
+
+State 53
+
+   42 keystroke: "uparrow" •
+
+    $default  reduce using rule 42 (keystroke)
+
+
+State 54
+
+   43 keystroke: "downarrow" •
+
+    $default  reduce using rule 43 (keystroke)
+
+
+State 55
+
+   46 keystroke: "leftmouse_down" •
+
+    $default  reduce using rule 46 (keystroke)
+
+
+State 56
+
+   47 keystroke: "middlemouse_down" •
+
+    $default  reduce using rule 47 (keystroke)
+
+
+State 57
+
+   48 keystroke: "rightmouse_down" •
+
+    $default  reduce using rule 48 (keystroke)
+
+
+State 58
+
+   49 keystroke: "leftmouse_up" •
+
+    $default  reduce using rule 49 (keystroke)
+
+
+State 59
+
+   50 keystroke: "middlemouse_up" •
+
+    $default  reduce using rule 50 (keystroke)
+
+
+State 60
+
+   51 keystroke: "rightmouse_up" •
+
+    $default  reduce using rule 51 (keystroke)
+
+
+State 61
+
+   52 keystroke: "mouse_move" •
+
+    $default  reduce using rule 52 (keystroke)
+
+
+State 62
+
+   53 keystroke: "mouse_drag" •
+
+    $default  reduce using rule 53 (keystroke)
+
+
+State 63
+
+   63 keystroke: "f1" •
+
+    $default  reduce using rule 63 (keystroke)
+
+
+State 64
+
+   54 keystroke: "akey" •
+
+    $default  reduce using rule 54 (keystroke)
+
+
+State 65
+
+   55 keystroke: "skey" •
+
+    $default  reduce using rule 55 (keystroke)
+
+
+State 66
+
+   56 keystroke: "dkey" •
+
+    $default  reduce using rule 56 (keystroke)
+
+
+State 67
+
+   57 keystroke: "fkey" •
+
+    $default  reduce using rule 57 (keystroke)
+
+
+State 68
+
+   58 keystroke: "hkey" •
+
+    $default  reduce using rule 58 (keystroke)
+
+
+State 69
+
+   59 keystroke: "jkey" •
+
+    $default  reduce using rule 59 (keystroke)
+
+
+State 70
+
+   60 keystroke: "kkey" •
+
+    $default  reduce using rule 60 (keystroke)
+
+
+State 71
+
+   61 keystroke: "lkey" •
+
+    $default  reduce using rule 61 (keystroke)
+
+
+State 72
+
+   62 keystroke: "wkey" •
+
+    $default  reduce using rule 62 (keystroke)
+
+
+State 73
+
+   40 on_block: "on" keystroke • statement_block
+
+    "{"  shift, and go to state 47
+
+    statement_block  go to state 127
+
+
+State 74
+
+   39 animation_declaration: "animation" "identifier" • "(" object_type "identifier" ")"
+
+    "("  shift, and go to state 128
+
+
+State 75
+
+   38 animation_block: animation_declaration statement_block •
+
+    $default  reduce using rule 38 (animation_block)
+
+
+State 76
+
+   35 forward_declaration: "forward" "animation" "identifier" "(" • animation_parameter ")"
+
+    "triangle"   shift, and go to state 8
+    "pixmap"     shift, and go to state 9
+    "circle"     shift, and go to state 10
+    "rectangle"  shift, and go to state 11
+    "textbox"    shift, and go to state 12
+
+    object_type          go to state 129
+    animation_parameter  go to state 130
+
+
+State 77
+
+  131 primary_expression: "true" •
+
+    $default  reduce using rule 131 (primary_expression)
+
+
+State 78
+
+  132 primary_expression: "false" •
+
+    $default  reduce using rule 132 (primary_expression)
+
+
+State 79
+
+  128 primary_expression: "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 131
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 80
+
+  118 proto_expression: "sin" • "(" expression ")"
+
+    "("  shift, and go to state 132
+
+
+State 81
+
+  119 proto_expression: "cos" • "(" expression ")"
+
+    "("  shift, and go to state 133
+
+
+State 82
+
+  120 proto_expression: "tan" • "(" expression ")"
+
+    "("  shift, and go to state 134
+
+
+State 83
+
+  121 proto_expression: "asin" • "(" expression ")"
+
+    "("  shift, and go to state 135
+
+
+State 84
+
+  122 proto_expression: "acos" • "(" expression ")"
+
+    "("  shift, and go to state 136
+
+
+State 85
+
+  123 proto_expression: "atan" • "(" expression ")"
+
+    "("  shift, and go to state 137
+
+
+State 86
+
+  124 proto_expression: "sqrt" • "(" expression ")"
+
+    "("  shift, and go to state 138
+
+
+State 87
+
+  125 proto_expression: "abs" • "(" expression ")"
+
+    "("  shift, and go to state 139
+
+
+State 88
+
+  126 proto_expression: "floor" • "(" expression ")"
+
+    "("  shift, and go to state 140
+
+
+State 89
+
+  127 proto_expression: "random" • "(" expression ")"
+
+    "("  shift, and go to state 141
+
+
+State 90
+
+  113 four: "-" • four
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    four                go to state 142
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 91
+
+  112 four: "!" • four
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    four                go to state 143
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 92
+
+  130 primary_expression: "int constant" •
+
+    $default  reduce using rule 130 (primary_expression)
+
+
+State 93
+
+  133 primary_expression: "double constant" •
+
+    $default  reduce using rule 133 (primary_expression)
+
+
+State 94
+
+  134 primary_expression: "string constant" •
+
+    $default  reduce using rule 134 (primary_expression)
+
+
+State 95
+
+   87 variable: "identifier" •
+   88         | "identifier" • "[" expression "]"
+   89         | "identifier" • "." "identifier"
+   90         | "identifier" • "[" expression "]" "." "identifier"
+
+    "["  shift, and go to state 144
+    "."  shift, and go to state 145
+
+    $default  reduce using rule 87 (variable)
+
+
+State 96
+
+  129 primary_expression: variable •
+
+    $default  reduce using rule 129 (primary_expression)
+
+
+State 97
+
+    8 variable_declaration: simple_type "identifier" "[" expression • "]"
+   93 fifteen: expression • "||" fourteen
+
+    "]"   shift, and go to state 146
+    "||"  shift, and go to state 147
+
+
+State 98
+
+   91 expression: fifteen •
+
+    $default  reduce using rule 91 (expression)
+
+
+State 99
+
+   92 fifteen: fourteen •
+   95 fourteen: fourteen • "&&" twelve
+
+    "&&"  shift, and go to state 148
+
+    $default  reduce using rule 92 (fifteen)
+
+
+State 100
+
+   94 fourteen: twelve •
+   97 twelve: twelve • "==" ten
+   98       | twelve • "!=" ten
+
+    "=="  shift, and go to state 149
+    "!="  shift, and go to state 150
+
+    $default  reduce using rule 94 (fourteen)
+
+
+State 101
+
+   96 twelve: ten •
+  100 ten: ten • "<" eight
+  101    | ten • ">" eight
+  102    | ten • "<=" eight
+  103    | ten • ">=" eight
+
+    "<"   shift, and go to state 151
+    ">"   shift, and go to state 152
+    "<="  shift, and go to state 153
+    ">="  shift, and go to state 154
+
+    $default  reduce using rule 96 (twelve)
+
+
+State 102
+
+   99 ten: eight •
+  105 eight: eight • "+" six
+  106      | eight • "-" six
+
+    "+"  shift, and go to state 155
+    "-"  shift, and go to state 156
+
+    $default  reduce using rule 99 (ten)
+
+
+State 103
+
+  104 eight: six •
+  108 six: six • "*" four
+  109    | six • "/" four
+  110    | six • "%" four
+
+    "*"  shift, and go to state 157
+    "/"  shift, and go to state 158
+    "%"  shift, and go to state 159
+
+    $default  reduce using rule 104 (eight)
+
+
+State 104
+
+  107 six: four •
+
+    $default  reduce using rule 107 (six)
+
+
+State 105
+
+  111 four: three •
+  115 three: three • "touches" proto_expression
+  116      | three • "near" proto_expression
+
+    "touches"  shift, and go to state 160
+    "near"     shift, and go to state 161
+
+    $default  reduce using rule 111 (four)
+
+
+State 106
+
+  114 three: proto_expression •
+
+    $default  reduce using rule 114 (three)
+
+
+State 107
+
+  117 proto_expression: primary_expression •
+
+    $default  reduce using rule 117 (proto_expression)
+
+
+State 108
+
+   12 optional_initializer: "=" expression •
+   93 fifteen: expression • "||" fourteen
+
+    "||"  shift, and go to state 147
+
+    $default  reduce using rule 12 (optional_initializer)
+
+
+State 109
+
+   26 parameter: "identifier" • "=" expression
+
+    "="  shift, and go to state 162
+
+
+State 110
+
+   21 parameter_list_or_empty: "(" parameter_list • ")"
+
+    ")"  shift, and go to state 163
+
+
+State 111
+
+   24 parameter_list: parameter • "," parameter_list
+   25               | parameter •
+
+    ","  shift, and go to state 164
+
+    $default  reduce using rule 25 (parameter_list)
+
+
+State 112
+
+   22 parameter_list_or_empty: "(" empty • ")"
+
+    ")"  shift, and go to state 165
+
+
+State 113
+
+   15 object_declaration: object_type "identifier" "[" expression • "]"
+   93 fifteen: expression • "||" fourteen
+
+    "]"   shift, and go to state 166
+    "||"  shift, and go to state 147
+
+
+State 114
+
+   75 if_statement: "if" • "(" expression ")" statement_or_block_of_statements
+   76             | "if" • "(" expression ")" statement_or_block_of_statements "else" statement_or_block_of_statements
+
+    "("  shift, and go to state 167
+
+
+State 115
+
+   77 for_statement: "for" • "(" assign_statement_or_empty ";" expression ";" assign_statement_or_empty ")" statement_or_block_of_statements
+
+    "("  shift, and go to state 168
+
+
+State 116
+
+   79 exit_statement: "exit" • "(" expression ")"
+
+    "("  shift, and go to state 169
+
+
+State 117
+
+   78 print_statement: "print" • "(" expression ")"
+
+    "("  shift, and go to state 170
+
+
+State 118
+
+   67 statement_block: "{" "}" •
+
+    $default  reduce using rule 67 (statement_block)
+
+
+State 119
+
+   66 statement_block: "{" statement_list • "}"
+
+    "}"  shift, and go to state 171
+
+
+State 120
+
+   68 statement_list: statement • statement_list
+   69               | statement •
+
+    "if"          shift, and go to state 114
+    "for"         shift, and go to state 115
+    "exit"        shift, and go to state 116
+    "print"       shift, and go to state 117
+    "identifier"  shift, and go to state 95
+
+    $default  reduce using rule 69 (statement_list)
+
+    statement_list    go to state 172
+    statement         go to state 120
+    if_statement      go to state 121
+    for_statement     go to state 122
+    print_statement   go to state 123
+    exit_statement    go to state 124
+    assign_statement  go to state 125
+    variable          go to state 126
+
+
+State 121
+
+   70 statement: if_statement •
+
+    $default  reduce using rule 70 (statement)
+
+
+State 122
+
+   71 statement: for_statement •
+
+    $default  reduce using rule 71 (statement)
+
+
+State 123
+
+   73 statement: print_statement • ";"
+
+    ";"  shift, and go to state 173
+
+
+State 124
+
+   74 statement: exit_statement • ";"
+
+    ";"  shift, and go to state 174
+
+
+State 125
+
+   72 statement: assign_statement • ";"
+
+    ";"  shift, and go to state 175
+
+
+State 126
+
+   82 assign_statement: variable • "=" expression
+   83                 | variable • "+=" expression
+   84                 | variable • "-=" expression
+   85                 | variable • "++"
+   86                 | variable • "--"
+
+    "="   shift, and go to state 176
+    "+="  shift, and go to state 177
+    "-="  shift, and go to state 178
+    "++"  shift, and go to state 179
+    "--"  shift, and go to state 180
+
+
+State 127
+
+   40 on_block: "on" keystroke statement_block •
+
+    $default  reduce using rule 40 (on_block)
+
+
+State 128
+
+   39 animation_declaration: "animation" "identifier" "(" • object_type "identifier" ")"
+
+    "triangle"   shift, and go to state 8
+    "pixmap"     shift, and go to state 9
+    "circle"     shift, and go to state 10
+    "rectangle"  shift, and go to state 11
+    "textbox"    shift, and go to state 12
+
+    object_type  go to state 181
+
+
+State 129
+
+   36 animation_parameter: object_type • "identifier"
+   37                    | object_type •
+
+    "identifier"  shift, and go to state 182
+
+    $default  reduce using rule 37 (animation_parameter)
+
+
+State 130
+
+   35 forward_declaration: "forward" "animation" "identifier" "(" animation_parameter • ")"
+
+    ")"  shift, and go to state 183
+
+
+State 131
+
+   93 fifteen: expression • "||" fourteen
+  128 primary_expression: "(" expression • ")"
+
+    ")"   shift, and go to state 184
+    "||"  shift, and go to state 147
+
+
+State 132
+
+  118 proto_expression: "sin" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 185
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 133
+
+  119 proto_expression: "cos" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 186
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 134
+
+  120 proto_expression: "tan" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 187
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 135
+
+  121 proto_expression: "asin" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 188
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 136
+
+  122 proto_expression: "acos" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 189
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 137
+
+  123 proto_expression: "atan" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 190
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 138
+
+  124 proto_expression: "sqrt" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 191
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 139
+
+  125 proto_expression: "abs" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 192
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 140
+
+  126 proto_expression: "floor" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 193
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 141
+
+  127 proto_expression: "random" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 194
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 142
+
+  113 four: "-" four •
+
+    $default  reduce using rule 113 (four)
+
+
+State 143
+
+  112 four: "!" four •
+
+    $default  reduce using rule 112 (four)
+
+
+State 144
+
+   88 variable: "identifier" "[" • expression "]"
+   90         | "identifier" "[" • expression "]" "." "identifier"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 195
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 145
+
+   89 variable: "identifier" "." • "identifier"
+
+    "identifier"  shift, and go to state 196
+
+
+State 146
+
+    8 variable_declaration: simple_type "identifier" "[" expression "]" •
+
+    $default  reduce using rule 8 (variable_declaration)
+
+
+State 147
+
+   93 fifteen: expression "||" • fourteen
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    fourteen            go to state 197
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 148
+
+   95 fourteen: fourteen "&&" • twelve
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    twelve              go to state 198
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 149
+
+   97 twelve: twelve "==" • ten
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    ten                 go to state 199
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 150
+
+   98 twelve: twelve "!=" • ten
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    ten                 go to state 200
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 151
+
+  100 ten: ten "<" • eight
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    eight               go to state 201
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 152
+
+  101 ten: ten ">" • eight
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    eight               go to state 202
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 153
+
+  102 ten: ten "<=" • eight
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    eight               go to state 203
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 154
+
+  103 ten: ten ">=" • eight
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    eight               go to state 204
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 155
+
+  105 eight: eight "+" • six
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    six                 go to state 205
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 156
+
+  106 eight: eight "-" • six
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    six                 go to state 206
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 157
+
+  108 six: six "*" • four
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    four                go to state 207
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 158
+
+  109 six: six "/" • four
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    four                go to state 208
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 159
+
+  110 six: six "%" • four
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    four                go to state 209
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 160
+
+  115 three: three "touches" • proto_expression
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    proto_expression    go to state 210
+    primary_expression  go to state 107
+
+
+State 161
+
+  116 three: three "near" • proto_expression
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    proto_expression    go to state 211
+    primary_expression  go to state 107
+
+
+State 162
+
+   26 parameter: "identifier" "=" • expression
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 212
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 163
+
+   21 parameter_list_or_empty: "(" parameter_list ")" •
+
+    $default  reduce using rule 21 (parameter_list_or_empty)
+
+
+State 164
+
+   24 parameter_list: parameter "," • parameter_list
+
+    "identifier"  shift, and go to state 109
+
+    parameter_list  go to state 213
+    parameter       go to state 111
+
+
+State 165
+
+   22 parameter_list_or_empty: "(" empty ")" •
+
+    $default  reduce using rule 22 (parameter_list_or_empty)
+
+
+State 166
+
+   15 object_declaration: object_type "identifier" "[" expression "]" •
+
+    $default  reduce using rule 15 (object_declaration)
+
+
+State 167
+
+   75 if_statement: "if" "(" • expression ")" statement_or_block_of_statements
+   76             | "if" "(" • expression ")" statement_or_block_of_statements "else" statement_or_block_of_statements
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 214
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 168
+
+   77 for_statement: "for" "(" • assign_statement_or_empty ";" expression ";" assign_statement_or_empty ")" statement_or_block_of_statements
+
+    "identifier"  shift, and go to state 95
+
+    $default  reduce using rule 135 (empty)
+
+    assign_statement_or_empty  go to state 215
+    assign_statement           go to state 216
+    variable                   go to state 126
+    empty                      go to state 217
+
+
+State 169
+
+   79 exit_statement: "exit" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 218
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 170
+
+   78 print_statement: "print" "(" • expression ")"
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 219
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 171
+
+   66 statement_block: "{" statement_list "}" •
+
+    $default  reduce using rule 66 (statement_block)
+
+
+State 172
+
+   68 statement_list: statement statement_list •
+
+    $default  reduce using rule 68 (statement_list)
+
+
+State 173
+
+   73 statement: print_statement ";" •
+
+    $default  reduce using rule 73 (statement)
+
+
+State 174
+
+   74 statement: exit_statement ";" •
+
+    $default  reduce using rule 74 (statement)
+
+
+State 175
+
+   72 statement: assign_statement ";" •
+
+    $default  reduce using rule 72 (statement)
+
+
+State 176
+
+   82 assign_statement: variable "=" • expression
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 220
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 177
+
+   83 assign_statement: variable "+=" • expression
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 221
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 178
+
+   84 assign_statement: variable "-=" • expression
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 222
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 179
+
+   85 assign_statement: variable "++" •
+
+    $default  reduce using rule 85 (assign_statement)
+
+
+State 180
+
+   86 assign_statement: variable "--" •
+
+    $default  reduce using rule 86 (assign_statement)
+
+
+State 181
+
+   39 animation_declaration: "animation" "identifier" "(" object_type • "identifier" ")"
+
+    "identifier"  shift, and go to state 223
+
+
+State 182
+
+   36 animation_parameter: object_type "identifier" •
+
+    $default  reduce using rule 36 (animation_parameter)
+
+
+State 183
+
+   35 forward_declaration: "forward" "animation" "identifier" "(" animation_parameter ")" •
+
+    $default  reduce using rule 35 (forward_declaration)
+
+
+State 184
+
+  128 primary_expression: "(" expression ")" •
+
+    $default  reduce using rule 128 (primary_expression)
+
+
+State 185
+
+   93 fifteen: expression • "||" fourteen
+  118 proto_expression: "sin" "(" expression • ")"
+
+    ")"   shift, and go to state 224
+    "||"  shift, and go to state 147
+
+
+State 186
+
+   93 fifteen: expression • "||" fourteen
+  119 proto_expression: "cos" "(" expression • ")"
+
+    ")"   shift, and go to state 225
+    "||"  shift, and go to state 147
+
+
+State 187
+
+   93 fifteen: expression • "||" fourteen
+  120 proto_expression: "tan" "(" expression • ")"
+
+    ")"   shift, and go to state 226
+    "||"  shift, and go to state 147
+
+
+State 188
+
+   93 fifteen: expression • "||" fourteen
+  121 proto_expression: "asin" "(" expression • ")"
+
+    ")"   shift, and go to state 227
+    "||"  shift, and go to state 147
+
+
+State 189
+
+   93 fifteen: expression • "||" fourteen
+  122 proto_expression: "acos" "(" expression • ")"
+
+    ")"   shift, and go to state 228
+    "||"  shift, and go to state 147
+
+
+State 190
+
+   93 fifteen: expression • "||" fourteen
+  123 proto_expression: "atan" "(" expression • ")"
+
+    ")"   shift, and go to state 229
+    "||"  shift, and go to state 147
+
+
+State 191
+
+   93 fifteen: expression • "||" fourteen
+  124 proto_expression: "sqrt" "(" expression • ")"
+
+    ")"   shift, and go to state 230
+    "||"  shift, and go to state 147
+
+
+State 192
+
+   93 fifteen: expression • "||" fourteen
+  125 proto_expression: "abs" "(" expression • ")"
+
+    ")"   shift, and go to state 231
+    "||"  shift, and go to state 147
+
+
+State 193
+
+   93 fifteen: expression • "||" fourteen
+  126 proto_expression: "floor" "(" expression • ")"
+
+    ")"   shift, and go to state 232
+    "||"  shift, and go to state 147
+
+
+State 194
+
+   93 fifteen: expression • "||" fourteen
+  127 proto_expression: "random" "(" expression • ")"
+
+    ")"   shift, and go to state 233
+    "||"  shift, and go to state 147
+
+
+State 195
+
+   88 variable: "identifier" "[" expression • "]"
+   90         | "identifier" "[" expression • "]" "." "identifier"
+   93 fifteen: expression • "||" fourteen
+
+    "]"   shift, and go to state 234
+    "||"  shift, and go to state 147
+
+
+State 196
+
+   89 variable: "identifier" "." "identifier" •
+
+    $default  reduce using rule 89 (variable)
+
+
+State 197
+
+   93 fifteen: expression "||" fourteen •
+   95 fourteen: fourteen • "&&" twelve
+
+    "&&"  shift, and go to state 148
+
+    $default  reduce using rule 93 (fifteen)
+
+
+State 198
+
+   95 fourteen: fourteen "&&" twelve •
+   97 twelve: twelve • "==" ten
+   98       | twelve • "!=" ten
+
+    "=="  shift, and go to state 149
+    "!="  shift, and go to state 150
+
+    $default  reduce using rule 95 (fourteen)
+
+
+State 199
+
+   97 twelve: twelve "==" ten •
+  100 ten: ten • "<" eight
+  101    | ten • ">" eight
+  102    | ten • "<=" eight
+  103    | ten • ">=" eight
+
+    "<"   shift, and go to state 151
+    ">"   shift, and go to state 152
+    "<="  shift, and go to state 153
+    ">="  shift, and go to state 154
+
+    $default  reduce using rule 97 (twelve)
+
+
+State 200
+
+   98 twelve: twelve "!=" ten •
+  100 ten: ten • "<" eight
+  101    | ten • ">" eight
+  102    | ten • "<=" eight
+  103    | ten • ">=" eight
+
+    "<"   shift, and go to state 151
+    ">"   shift, and go to state 152
+    "<="  shift, and go to state 153
+    ">="  shift, and go to state 154
+
+    $default  reduce using rule 98 (twelve)
+
+
+State 201
+
+  100 ten: ten "<" eight •
+  105 eight: eight • "+" six
+  106      | eight • "-" six
+
+    "+"  shift, and go to state 155
+    "-"  shift, and go to state 156
+
+    $default  reduce using rule 100 (ten)
+
+
+State 202
+
+  101 ten: ten ">" eight •
+  105 eight: eight • "+" six
+  106      | eight • "-" six
+
+    "+"  shift, and go to state 155
+    "-"  shift, and go to state 156
+
+    $default  reduce using rule 101 (ten)
+
+
+State 203
+
+  102 ten: ten "<=" eight •
+  105 eight: eight • "+" six
+  106      | eight • "-" six
+
+    "+"  shift, and go to state 155
+    "-"  shift, and go to state 156
+
+    $default  reduce using rule 102 (ten)
+
+
+State 204
+
+  103 ten: ten ">=" eight •
+  105 eight: eight • "+" six
+  106      | eight • "-" six
+
+    "+"  shift, and go to state 155
+    "-"  shift, and go to state 156
+
+    $default  reduce using rule 103 (ten)
+
+
+State 205
+
+  105 eight: eight "+" six •
+  108 six: six • "*" four
+  109    | six • "/" four
+  110    | six • "%" four
+
+    "*"  shift, and go to state 157
+    "/"  shift, and go to state 158
+    "%"  shift, and go to state 159
+
+    $default  reduce using rule 105 (eight)
+
+
+State 206
+
+  106 eight: eight "-" six •
+  108 six: six • "*" four
+  109    | six • "/" four
+  110    | six • "%" four
+
+    "*"  shift, and go to state 157
+    "/"  shift, and go to state 158
+    "%"  shift, and go to state 159
+
+    $default  reduce using rule 106 (eight)
+
+
+State 207
+
+  108 six: six "*" four •
+
+    $default  reduce using rule 108 (six)
+
+
+State 208
+
+  109 six: six "/" four •
+
+    $default  reduce using rule 109 (six)
+
+
+State 209
+
+  110 six: six "%" four •
+
+    $default  reduce using rule 110 (six)
+
+
+State 210
+
+  115 three: three "touches" proto_expression •
+
+    $default  reduce using rule 115 (three)
+
+
+State 211
+
+  116 three: three "near" proto_expression •
+
+    $default  reduce using rule 116 (three)
+
+
+State 212
+
+   26 parameter: "identifier" "=" expression •
+   93 fifteen: expression • "||" fourteen
+
+    "||"  shift, and go to state 147
+
+    $default  reduce using rule 26 (parameter)
+
+
+State 213
+
+   24 parameter_list: parameter "," parameter_list •
+
+    $default  reduce using rule 24 (parameter_list)
+
+
+State 214
+
+   75 if_statement: "if" "(" expression • ")" statement_or_block_of_statements
+   76             | "if" "(" expression • ")" statement_or_block_of_statements "else" statement_or_block_of_statements
+   93 fifteen: expression • "||" fourteen
+
+    ")"   shift, and go to state 235
+    "||"  shift, and go to state 147
+
+
+State 215
+
+   77 for_statement: "for" "(" assign_statement_or_empty • ";" expression ";" assign_statement_or_empty ")" statement_or_block_of_statements
+
+    ";"  shift, and go to state 236
+
+
+State 216
+
+   80 assign_statement_or_empty: assign_statement •
+
+    $default  reduce using rule 80 (assign_statement_or_empty)
+
+
+State 217
+
+   81 assign_statement_or_empty: empty •
+
+    $default  reduce using rule 81 (assign_statement_or_empty)
+
+
+State 218
+
+   79 exit_statement: "exit" "(" expression • ")"
+   93 fifteen: expression • "||" fourteen
+
+    ")"   shift, and go to state 237
+    "||"  shift, and go to state 147
+
+
+State 219
+
+   78 print_statement: "print" "(" expression • ")"
+   93 fifteen: expression • "||" fourteen
+
+    ")"   shift, and go to state 238
+    "||"  shift, and go to state 147
+
+
+State 220
+
+   82 assign_statement: variable "=" expression •
+   93 fifteen: expression • "||" fourteen
+
+    "||"  shift, and go to state 147
+
+    $default  reduce using rule 82 (assign_statement)
+
+
+State 221
+
+   83 assign_statement: variable "+=" expression •
+   93 fifteen: expression • "||" fourteen
+
+    "||"  shift, and go to state 147
+
+    $default  reduce using rule 83 (assign_statement)
+
+
+State 222
+
+   84 assign_statement: variable "-=" expression •
+   93 fifteen: expression • "||" fourteen
+
+    "||"  shift, and go to state 147
+
+    $default  reduce using rule 84 (assign_statement)
+
+
+State 223
+
+   39 animation_declaration: "animation" "identifier" "(" object_type "identifier" • ")"
+
+    ")"  shift, and go to state 239
+
+
+State 224
+
+  118 proto_expression: "sin" "(" expression ")" •
+
+    $default  reduce using rule 118 (proto_expression)
+
+
+State 225
+
+  119 proto_expression: "cos" "(" expression ")" •
+
+    $default  reduce using rule 119 (proto_expression)
+
+
+State 226
+
+  120 proto_expression: "tan" "(" expression ")" •
+
+    $default  reduce using rule 120 (proto_expression)
+
+
+State 227
+
+  121 proto_expression: "asin" "(" expression ")" •
+
+    $default  reduce using rule 121 (proto_expression)
+
+
+State 228
+
+  122 proto_expression: "acos" "(" expression ")" •
+
+    $default  reduce using rule 122 (proto_expression)
+
+
+State 229
+
+  123 proto_expression: "atan" "(" expression ")" •
+
+    $default  reduce using rule 123 (proto_expression)
+
+
+State 230
+
+  124 proto_expression: "sqrt" "(" expression ")" •
+
+    $default  reduce using rule 124 (proto_expression)
+
+
+State 231
+
+  125 proto_expression: "abs" "(" expression ")" •
+
+    $default  reduce using rule 125 (proto_expression)
+
+
+State 232
+
+  126 proto_expression: "floor" "(" expression ")" •
+
+    $default  reduce using rule 126 (proto_expression)
+
+
+State 233
+
+  127 proto_expression: "random" "(" expression ")" •
+
+    $default  reduce using rule 127 (proto_expression)
+
+
+State 234
+
+   88 variable: "identifier" "[" expression "]" •
+   90         | "identifier" "[" expression "]" • "." "identifier"
+
+    "."  shift, and go to state 240
+
+    $default  reduce using rule 88 (variable)
+
+
+State 235
+
+   75 if_statement: "if" "(" expression ")" • statement_or_block_of_statements
+   76             | "if" "(" expression ")" • statement_or_block_of_statements "else" statement_or_block_of_statements
+
+    "if"          shift, and go to state 114
+    "for"         shift, and go to state 115
+    "exit"        shift, and go to state 116
+    "print"       shift, and go to state 117
+    "{"           shift, and go to state 47
+    "identifier"  shift, and go to state 95
+
+    statement_or_block_of_statements  go to state 241
+    statement_block                   go to state 242
+    statement                         go to state 243
+    if_statement                      go to state 121
+    for_statement                     go to state 122
+    print_statement                   go to state 123
+    exit_statement                    go to state 124
+    assign_statement                  go to state 125
+    variable                          go to state 126
+
+
+State 236
+
+   77 for_statement: "for" "(" assign_statement_or_empty ";" • expression ";" assign_statement_or_empty ")" statement_or_block_of_statements
+
+    "true"             shift, and go to state 77
+    "false"            shift, and go to state 78
+    "("                shift, and go to state 79
+    "sin"              shift, and go to state 80
+    "cos"              shift, and go to state 81
+    "tan"              shift, and go to state 82
+    "asin"             shift, and go to state 83
+    "acos"             shift, and go to state 84
+    "atan"             shift, and go to state 85
+    "sqrt"             shift, and go to state 86
+    "abs"              shift, and go to state 87
+    "floor"            shift, and go to state 88
+    "random"           shift, and go to state 89
+    "-"                shift, and go to state 90
+    "!"                shift, and go to state 91
+    "int constant"     shift, and go to state 92
+    "double constant"  shift, and go to state 93
+    "string constant"  shift, and go to state 94
+    "identifier"       shift, and go to state 95
+
+    variable            go to state 96
+    expression          go to state 244
+    fifteen             go to state 98
+    fourteen            go to state 99
+    twelve              go to state 100
+    ten                 go to state 101
+    eight               go to state 102
+    six                 go to state 103
+    four                go to state 104
+    three               go to state 105
+    proto_expression    go to state 106
+    primary_expression  go to state 107
+
+
+State 237
+
+   79 exit_statement: "exit" "(" expression ")" •
+
+    $default  reduce using rule 79 (exit_statement)
+
+
+State 238
+
+   78 print_statement: "print" "(" expression ")" •
+
+    $default  reduce using rule 78 (print_statement)
+
+
+State 239
+
+   39 animation_declaration: "animation" "identifier" "(" object_type "identifier" ")" •
+
+    $default  reduce using rule 39 (animation_declaration)
+
+
+State 240
+
+   90 variable: "identifier" "[" expression "]" "." • "identifier"
+
+    "identifier"  shift, and go to state 245
+
+
+State 241
+
+   75 if_statement: "if" "(" expression ")" statement_or_block_of_statements •
+   76             | "if" "(" expression ")" statement_or_block_of_statements • "else" statement_or_block_of_statements
+
+    "else"  shift, and go to state 246
+
+    $default  reduce using rule 75 (if_statement)
+
+
+State 242
+
+   64 statement_or_block_of_statements: statement_block •
+
+    $default  reduce using rule 64 (statement_or_block_of_statements)
+
+
+State 243
+
+   65 statement_or_block_of_statements: statement •
+
+    $default  reduce using rule 65 (statement_or_block_of_statements)
+
+
+State 244
+
+   77 for_statement: "for" "(" assign_statement_or_empty ";" expression • ";" assign_statement_or_empty ")" statement_or_block_of_statements
+   93 fifteen: expression • "||" fourteen
+
+    ";"   shift, and go to state 247
+    "||"  shift, and go to state 147
+
+
+State 245
+
+   90 variable: "identifier" "[" expression "]" "." "identifier" •
+
+    $default  reduce using rule 90 (variable)
+
+
+State 246
+
+   76 if_statement: "if" "(" expression ")" statement_or_block_of_statements "else" • statement_or_block_of_statements
+
+    "if"          shift, and go to state 114
+    "for"         shift, and go to state 115
+    "exit"        shift, and go to state 116
+    "print"       shift, and go to state 117
+    "{"           shift, and go to state 47
+    "identifier"  shift, and go to state 95
+
+    statement_or_block_of_statements  go to state 248
+    statement_block                   go to state 242
+    statement                         go to state 243
+    if_statement                      go to state 121
+    for_statement                     go to state 122
+    print_statement                   go to state 123
+    exit_statement                    go to state 124
+    assign_statement                  go to state 125
+    variable                          go to state 126
+
+
+State 247
+
+   77 for_statement: "for" "(" assign_statement_or_empty ";" expression ";" • assign_statement_or_empty ")" statement_or_block_of_statements
+
+    "identifier"  shift, and go to state 95
+
+    $default  reduce using rule 135 (empty)
+
+    assign_statement_or_empty  go to state 249
+    assign_statement           go to state 216
+    variable                   go to state 126
+    empty                      go to state 217
+
+
+State 248
+
+   76 if_statement: "if" "(" expression ")" statement_or_block_of_statements "else" statement_or_block_of_statements •
+
+    $default  reduce using rule 76 (if_statement)
+
+
+State 249
+
+   77 for_statement: "for" "(" assign_statement_or_empty ";" expression ";" assign_statement_or_empty • ")" statement_or_block_of_statements
+
+    ")"  shift, and go to state 250
+
+
+State 250
+
+   77 for_statement: "for" "(" assign_statement_or_empty ";" expression ";" assign_statement_or_empty ")" • statement_or_block_of_statements
+
+    "if"          shift, and go to state 114
+    "for"         shift, and go to state 115
+    "exit"        shift, and go to state 116
+    "print"       shift, and go to state 117
+    "{"           shift, and go to state 47
+    "identifier"  shift, and go to state 95
+
+    statement_or_block_of_statements  go to state 251
+    statement_block                   go to state 242
+    statement                         go to state 243
+    if_statement                      go to state 121
+    for_statement                     go to state 122
+    print_statement                   go to state 123
+    exit_statement                    go to state 124
+    assign_statement                  go to state 125
+    variable                          go to state 126
+
+
+State 251
+
+   77 for_statement: "for" "(" assign_statement_or_empty ";" expression ";" assign_statement_or_empty ")" statement_or_block_of_statements •
+
+    $default  reduce using rule 77 (for_statement)
