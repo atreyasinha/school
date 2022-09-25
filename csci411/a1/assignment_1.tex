@@ -1,0 +1,215 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{ latexsym }
+\usepackage{graphicx}
+\graphicspath{ {Figures/} }
+
+\usepackage{amsmath}
+\usepackage[a4paper, total={6.2in, 8in}]{geometry}
+
+\usepackage[usenames,dvipsnames]{color}
+\definecolor{darkblue}{rgb}{0,0,.6}
+\definecolor{darkred}{rgb}{.7,0,0}
+\definecolor{darkgreen}{rgb}{0,.6,0}
+\definecolor{red}{rgb}{.98,0,0}
+\usepackage[colorlinks,pagebackref,pdfusetitle,urlcolor=darkblue,citecolor=darkblue,linkcolor=darkred,bookmarksnumbered,plainpages=false]{hyperref}
+
+\title{CSCI 411 - Advanced Algorithms and Complexity \\ Assignment 1}
+\author{ }
+\date{January 22, 2022}
+
+\begin{document}
+
+\maketitle
+
+%\section{Introduction}
+
+\noindent Solutions to the written portion of this assignment should be submitted via PDF to Blackboard. Make sure to justify your answers. C++ code should be submitted both on Blackboard and on \href{https://turnin.ecst.csuchico.edu/}{turnin}. Both parts of the assignment are due before \textbf{February 6th at 11:59 pm}. \\
+
+\noindent There may be time in class to discuss these problems in small groups and I highly encourage you to collaborate with one another outside of class. However, you must write up your own solutions \textbf{independently} of one another. Feel free to communicate via \href{https://discord.gg/XcZ3jzkBrx}{Discord} and to post questions on the appropriate forum in \href{https://learn.csuchico.edu/webapps/blackboard/content/listContentEditable.jsp?content_id=_6022500_1&course_id=_172426_1}{Blackboard}. Do not post solutions. Also, please include a list of the people you work with at the top of your submission. \\
+
+
+\section*{Written Problems}
+
+\begin{enumerate}
+    \item (10 pts) Sort the following functions in terms of asymptotic growth from smallest to largest. In particular, the resulting order $f_1, \dots, f_{12}$ should be such that $f_1 = O(f_2)$, $f_2 = O(f_3)$, and so on. Identify any groups of functions that are $\Theta$ of one another.
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline
+             $n$ & $2^n$ & $n^3$ & $n \ln(n)$ & $2$ & $n!$ & $\log_2((4n)^n)$ & $\ln(n^2)$ & $\big(\frac{3}{2}\big)^n$ & $n^{1/5}$ & $\ln^2(n)$ & $52!$ \\ \hline
+        \end{tabular}
+    \end{center}
+    
+    \item Consider the following intuition for a sorting algorithm. Let $A$ be a list of real numbers. If $A$ is of size 0 or 1, return it since it is already sorted. Otherwise, pick the last element of $A$ to be used as a pivot and call it $p$. For each element $e$ of $A$ except the last element, if $e \leq p$, place $e$ in a list called $L$. On the other hand, if $e>p$, place $e$ in a another list called $R$. Repeat this procedure on $L$ and $R$ and call the resulting lists $L'$ and $R'$. Make a new list by adding $p$ between $L'$ and $R'$. Return the result.
+    \begin{enumerate}
+        \item (10 pts) Write pseudocode following the above intuition.
+        \item (5 pts) Determine the \textbf{worst-case} asymptotic run time of this algorithm and explain why this is the worst case.
+        \item (5 pts) Assume that the sizes of $L$ and $R$ are equal at each step of the algorithm. Find a recurrence relation describing the run time in this case.
+        \item (10 pts) Given this recurrence relation, what is the asymptotic run time of the algorithm? Be sure to justify your answer.
+    \end{enumerate}
+    
+    \newpage 
+    
+    \item Let $G=(V,E)$ be a directed graph, $s \in V$, $N(u) = \{v | (u,v) \in E \}$ be the set of neighbors of $u \in V$, and $d(u,v)$ represent the shortest path distance between $u,v \in V$. If there is no path from $u$ to $v$, $d(u,v) = \infty$. We say that $G$ has property $P$ with respect to $s$ if, for $u,v \in V$, $|N(u)| \leq |N(v)|$ when $d(s,u) > d(s,v)$. Put another way, $G$ has property $P$ with respect to $s$ if vertices that are further away from $s$ have at most as many neighbors as those closer to $s$. %consider the disconnected case
+    \begin{enumerate}
+        \item (5 pts) Describe an intuitive approach for determining whether or not $G$ has property $P$ with respect to $s$.
+        \item (15 pts) Write pseudocode for a function \verb|hasP(G, s)| which returns \verb|True| if $G$ has property $P$ with respect to $s$ and \verb|False| otherwise.
+        \item (5 pts) Argue that your pseudocode is correct.
+        \item (5 pts) Analyze the asymptotic run time of your algorithm.
+    \end{enumerate}
+    
+    \item Let $G=(V,E)$ be a directed graph. We would like to partition the vertices of $G$ into three groups, $A$, $B$, and $C$:
+    \begin{align*}
+        A &= \{v | u,v\in V, (u \leadsto v) \implies (v \leadsto u), \exists w\in V \text{ s.t. } v \leadsto w \text{ and } w \not \leadsto v\} \\
+        B &= \{v | u,v\in V, (v \leadsto u) \implies (u \leadsto v), \exists w\in V \text{ s.t. } w \leadsto v \text{ and } v \not \leadsto w\} \\
+        C &= \{v | v \in V, v \not \in A \cup B\}
+    \end{align*}
+    In words, $A$ is the set of vertices $v$ such that $(1)$ if $u \leadsto v$, then $v \leadsto u$ and $(2)$ there is some vertex $w \in V$ such that $v \leadsto w$ but $w \not \leadsto v$. $B$ is the set of vertices $v$ such that $(1)$ if $v \leadsto u$, then $u \leadsto v$ and $(2)$ there is some vertex $w \in V$ such that $w \leadsto v$ but $v \not \leadsto w$. And $C$ is the set of all vertices not included in $A$ or $B$. There are several specific examples of $A$, $B$, and $C$ at the end of this document.
+    \begin{enumerate}
+        \item (5 pts) Describe an intuitive approach for determining the size of the sets $A$, $B$, and $C$.
+        \item (15 pts) Write pseudocode for a function \verb|getSetSizes(G)| which returns $(|A|, |B|, |C|)$, a triple with the sizes of each set.
+        \item (5 pts) Argue that your pseudocode is correct.
+        \item (5 pts) Analyze the asymptotic run time of your algorithm.
+    \end{enumerate}
+\end{enumerate}
+
+\section*{Coding Problem}
+
+\noindent (20 pts) Write a C++ implementation of the pseudocode you developed for problem (4b) and submit to Blackboard and to \href{https://turnin.ecst.csuchico.edu/}{turnin} as assignment\_1.cpp. Some skeleton code that you might find useful is available on Blackboard (assignment\_1\_skeleton.cpp).
+
+\begin{itemize}
+    \item Input will come from cin
+    \begin{itemize}
+        \item The first line will contain two integers, $n$ and $m$, separated by a space.
+        \item $n$ is a number of vertices and $m$ is a number of edges.
+        \item The next $m$ lines will contain two integers, $u$ and $v$, separated by a space.
+        \item Each of these pairs represents a directed edge $(u,v)$.
+    \end{itemize}
+    \item Print output to cout
+    \begin{itemize}
+        \item On one line print three space separated integers representing the sizes of of the sets $A$, $B$, and $C$ in that order.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Examples}
+
+In the following examples, green nodes belong to $A$, red nodes belong to $B$, and white nodes belong to $C$. \\
+
+\noindent \textbf{Example 1:}
+
+\begin{center}
+    \includegraphics[scale=0.5]{01_example_1}
+\end{center}
+
+Input:
+
+4 5
+
+1 2
+
+2 3
+
+3 4
+
+4 1
+
+2 4 \\
+
+Expected output:
+
+0 0 4\\
+      
+\noindent \textbf{Example 2:}
+
+\begin{center}
+    \includegraphics[scale=0.5]{01_example_2}
+\end{center}
+
+Input:
+
+5 7
+
+1 3
+
+3 2
+
+2 1
+
+1 4
+
+3 5
+
+4 5
+
+5 4\\
+
+Expected output:
+
+3 2 0\\
+
+
+\noindent \textbf{Example 3:}
+
+\begin{center}
+    \includegraphics[scale=0.5]{01_example_3}
+\end{center}
+
+Input:
+
+15 24
+
+1 2
+
+2 1
+
+1 3
+
+3 2
+
+3 6
+
+2 6
+
+6 12
+
+6 13
+
+13 12
+
+12 14
+
+14 13
+
+3 7
+
+7 13
+
+7 8
+
+8 9
+
+8 11
+
+9 10
+
+11 10
+
+10 7
+
+4 5
+
+5 4
+
+4 11
+
+5 11
+
+10 15\\
+
+Expected output:
+
+5 4 6
+
+\end{document}
+
+
